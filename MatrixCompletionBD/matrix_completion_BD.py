@@ -1,6 +1,6 @@
 import numpy as np
 import os, random
-#from completethat/completethat/matrix_completion.py import MatrixCompletion
+#from MatrixCompletion import MatrixCompletion
 ## for tab delimitted input files 
 
 #class MatrixCompletionBD(MatrixCompletion):
@@ -106,6 +106,7 @@ class MatrixCompletionBD:
 			iteration+=1
 			mse=sum(total_err)*1.0/len(total_err)
 			delta_err=abs(delta_err-mse)
+			# we are printing error after each pass, lets make it 
 			print ('Delta Error: %f ' % delta_err)
 		print ('iterations: %f ' % iteration)
 		print ('Delta Error: %f ' % delta_err)
@@ -120,18 +121,18 @@ class MatrixCompletionBD:
 		users=open(user_out,'w')
 		items=open(item_out,'w')
 		for key in self.users:
-			user_string= key+ self.delimitter + self.delimitter.join(map(str,list(self.users[key])))
+			user_string= key+ self.delimitter + self.delimitter.join(map(str,list(self.users[key]))) + '\n'
 			users.write(user_string)
 		
 		for key in self.items:
-			item_string=key+ self.delimitter + self.delimitter.join(map(str,list(self.items[key])))
+			item_string=key+ self.delimitter + self.delimitter.join(map(str,list(self.items[key]))) + '\n'
 			items.write(item_string)
 			
 		users.close()
 		items.close()	
 			
 	## run model on test/validation set	
-	def validate_sgd(self,test_file_path='/Users/joshua/Desktop/School/Big_Data_Analytics/Data/user_movie_data/movie_train.txt'):
+	def validate_sgd(self,test_file_path='/Users/joshua/Desktop/School/Big_Data_Analytics/Data/user_movie_data/movie_test.txt'):
 		
 		mse=[]
 		test_set=open(test_file_path)
