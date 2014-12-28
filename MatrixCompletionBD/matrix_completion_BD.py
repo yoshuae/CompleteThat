@@ -4,6 +4,21 @@ import os, random
 ## for tab delimitted input files 
 
 #class MatrixCompletionBD(MatrixCompletion):
+
+""" A general class for matrix factorization via stochastic gradient descent
+==================== 
+Add Info:
+file: three column file of user, item, and value to build models
+Class methods
+====================
+train_sgd():= method to complete the matrix via sgd
+shuffle_file():= method to 'psuedo' shuffle input file in chunks
+file_split():= method to split input file into training and test set
+save_model():= save user and items parameters to text file
+validate_sgd():= validate sgd model on test set 
+build_matrix():= for smaller data build complete matrix in pandas df or numpy matrix? 
+"""
+
 class MatrixCompletionBD:		
 	#initialize Matrix Completion BD object
 	def __init__(self,file_path='/Users/joshua/Desktop/School/Big_Data_Analytics/Data/user_movie_data/movie_train.txt',delimitter='\t',*args, **kwargs):
@@ -13,7 +28,7 @@ class MatrixCompletionBD:
 		self.users=dict()
 		self.items=dict()
 		
-	# shuffle line of file for sgd method, improves performance	
+	# shuffle line of file for sgd method, improves performance/convergence
 	def shuffle_file(self,batch_size=50000):
 		data=open(self.file)
 		temp_file=open('temp_shuffled.txt','w')
