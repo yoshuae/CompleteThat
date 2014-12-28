@@ -1,7 +1,7 @@
 import numpy as np
 import os, random
-#from completethat import MatrixCompletion
-## for tab delimitted input files ( can now specify delimitter)
+#from completethat/completethat/matrix_completion.py import MatrixCompletion
+## for tab delimitted input files 
 
 #class MatrixCompletionBD(MatrixCompletion):
 class MatrixCompletionBD:		
@@ -120,11 +120,11 @@ class MatrixCompletionBD:
 		users=open(user_out,'w')
 		items=open(item_out,'w')
 		for key in self.users:
-			user_string= key+ self.delimitter + self.delimitter.join(list(self.users[key]))
+			user_string= key+ self.delimitter + self.delimitter.join(map(str,list(self.users[key])))
 			users.write(user_string)
 		
 		for key in self.items:
-			item_string=key+ self.delimitter + self.delimitter.join(list(self.items[key]))
+			item_string=key+ self.delimitter + self.delimitter.join(map(str,list(self.items[key])))
 			items.write(item_string)
 			
 		users.close()
