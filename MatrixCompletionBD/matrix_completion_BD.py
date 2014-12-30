@@ -71,18 +71,21 @@ class MatrixCompletionBD:
 		print('test file written as ' + test_file)
 		temp_file.close()
 		
-	def train_sgd(self,dimension=6,reltol=.1, maxiter=1000,batch_size_sgd=50000,shuffle=True):
+	def train_sgd(self,dimension=6,init_step_size=.01,reltol=.0001, maxiter=1000,batch_size_sgd=50000,shuffle=True):
 		
 		ratings=[]
-		alpha=.00001
+		alpha=init_step_size
 		iteration=0
 		delta_err=1
+		new_mse=reltol+10
 		counter=0
 		while iteration != maxiter and delta_err > reltol :
 
 			data=open(self.file)
 			total_err=[0]
-	
+			if alpha>=.000001: alpha*=.3
+			else: alpha=.000001
+			
 			for line in data:
 				#line=data.readline()
 				record=line[0:len(line)-1].split(self.delimitter)
@@ -119,13 +122,13 @@ class MatrixCompletionBD:
 			data.close()
 			if shuffle: self.shuffle_file(batch_size=batch_size_sgd)
 			iteration+=1
-			mse=sum(total_err)*1.0/len(total_err)
-			delta_err=abs(delta_err-mse)
+			old_mse=new_mse
+			new_mse=sum(total_err)*1.0/len(total_err)
+			delta_err=abs(old_mse-new_mse)
 			# we are printing error after each pass, lets make it 
 			print ('Delta Error: %f ' % delta_err)
 		print ('iterations: %f ' % iteration)
-		print ('Delta Error: %f ' % delta_err)
-		print ('MSE: %f ' % mse)
+		print ('MSE: %f ' % new_mse)
 		print counter
 		
 	#save model user and item parameters to text file	
