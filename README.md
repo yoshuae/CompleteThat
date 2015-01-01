@@ -6,18 +6,22 @@ optimization problem to estimate the missing entries.
 
 Mathematically, the package solves a relaxation (using the nuclear norm or the 
 Frobenius norm of the objective matrix) of the following problem:
-  minimize_{X} X
+
+  minimize_{X} ||X||
   st. X(i,j) = M(i,j) \forall (i,j)\in \Omega,
   where, M represents the data matrix and \Omega represents the set of p
   observed entries of M
 
-Usage:
+Usage
+====================
 
->>> from completethat import MatrixCompletion
->>> problem = MatrixCompletion(M, Omega)
->>> problem.complete_it(algo_name)
->>> X = problem.get_matrix()
->>> out_info = problem.get_out() #Extrainformation (number of iterations, ect)
+```python
+from completethat import MatrixCompletion
+problem = MatrixCompletion(M, Omega)
+problem.complete_it(algo_name)
+X = problem.get_matrix()
+out_info = problem.get_out() #Extrainformation (number of iterations, ect)
+```
 
 Authors 
 ====================
