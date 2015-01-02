@@ -74,7 +74,7 @@ class MatrixCompletionBD:
 		print('test file written as ' + test_file)
 		temp_file.close()
 		
-	def train_sgd(self,dimension=6,init_step_size=.001,min_step=.000001, reltol=.001, maxiter=1000,batch_size_sgd=50000,shuffle=True):
+	def train_sgd(self,dimension=6,init_step_size=.01,min_step=.000001, reltol=.001,rand_init_scale=10, maxiter=1000,batch_size_sgd=50000,shuffle=True):
 		
 		ratings=[]
 		alpha=init_step_size
@@ -113,9 +113,9 @@ class MatrixCompletionBD:
 				#else:
 					counter+=1
 					if record[0] not in self.users:
-						self.users[record[0]]=np.random.rand(dimension)*12
+						self.users[record[0]]=np.random.rand(dimension)*rand_init_scale
 					if record[1] not in self.items:
-						self.items[record[1]]=np.random.rand(dimension)*12
+						self.items[record[1]]=np.random.rand(dimension)*rand_init_scale
 					#self.users[record[0]][params]=np.random.rand(dimension)
 					#self.items[record[1]][params]=np.random.rand(dimension)
 					#self.users[record[0]][count]+=1
