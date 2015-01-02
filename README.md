@@ -15,9 +15,11 @@ Frobenius norm of the objective matrix) of the following problem:
 Usage
 ====================
 
+For matrices that fit into memory use the `MatrixCompletion`
+
 ```python
 from completethat import MatrixCompletion
-problem = MatrixCompletion(M, Omega)
+problem = MatrixCompletion(M)
 problem.complete_it(algo_name)
 X = problem.get_matrix()
 out_info = problem.get_out() #Extrainformation (number of iterations, ect)
