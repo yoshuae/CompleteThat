@@ -336,9 +336,8 @@ class MatrixCompletionBD:
         print('test file written as ' + test_file)
         temp_file.close()
 
-    def train_sgd(self,dimension=6,init_step_size=.01,reltol=.0001, maxiter=1000,batch_size_sgd=50000,shuffle=True):
+    def train_sgd(self,dimension=6,init_step_size=.01,min_step=.000001,reltol=.05,rand_init_scalar=1, maxiter=100,batch_size_sgd=50000,shuffle=True):
 
-        ratings=[]
         alpha=init_step_size
         iteration=0
         delta_err=1
@@ -349,41 +348,32 @@ class MatrixCompletionBD:
 
             data=open(self.file)
             total_err=[0]
-            if alpha>=.000001: alpha*=.3
-            else: alpha=.000001
+            if alpha>=min_step: alpha*=.3
+            else: alpha=min_step
 
             for line in data:
-                #line=data.readline()
+                
                     record=line[0:len(line)-1].split(self.delimitter)
                     record[2]=float(record[2])
-                    #print temp
+                    
                     # format : user, movie,5-point-ratings
                     ratings.append(record[2])
-                    # start with 5-point ratings
+                    
                     #if record[0] in self.users and record[1] in self.items :
                     try:
                         # do some updating
                             # updates
                             error=record[2]-4-np.dot(self.users[record[0]],self.items[record[1]])
-                            #if np.isnan(error):
-                            #	print (record,self.users[record[0]],self.items[record[1]])
-                            #print(error)
                             self.users[record[0]]=self.users[record[0]]+alpha*2*error*self.items[record[1]]
-                            #print self.users[record[0]]
                             self.items[record[1]]=self.items[record[1]]+alpha*2*error*self.users[record[0]]
                             total_err.append(error**2)
                     except:
                         #else:
                             counter+=1
                             if record[0] not in self.users:
-                                self.users[record[0]]=np.random.rand(dimension)
+                                self.users[record[0]]=np.random.rand(dimension)*rand_init_scalar
                             if record[1] not in self.items:
-                                self.items[record[1]]=np.random.rand(dimension)
-                            #self.users[record[0]][params]=np.random.rand(dimension)
-                            #self.items[record[1]][params]=np.random.rand(dimension)
-                            #self.users[record[0]][count]+=1
-                            #self.items[record[1]][count]+=1
-
+                                self.items[record[1]]=np.random.rand(dimension)*rand_init_scalar
 
             data.close()
             if shuffle: 
@@ -396,9 +386,9 @@ class MatrixCompletionBD:
     
     def save_model(self,user_out='user_params.txt',item_out='item_params.txt'):
         """
-            save model user and item parameters to text file	
-            user_key, user_vector entries
-            item_key, item_vector entries 
+        save model user and item parameters to text file	
+        user_key, user_vector entries
+        item_key, item_vector entries 
         """
         users=open(user_out,'w')
         items=open(item_out,'w')
@@ -411,7 +401,44 @@ class MatrixCompletionBD:
                 items.write(item_string)
 
         users.close()
-        items.close()	
+        items.close()
+
+	## read saved model, particularly useful for fitting very large files! 
+	def read_model(self,dimension=6,saved_user_params='user_params.txt',saved_item_params='item_params.txt'):
+		"""
+		
+		Read the saved user and item parameters from text files to the item and user dictionaries
+		
+		"""
+		#populate users:
+		user_data=open(saved_user_params)
+		for line in user_data:
+			record=line[0:len(line)-1].split(self.delimitter)
+			key=record.pop(0)
+			params=np.array(map(float,record))
+			self.users[key]=params
+
+		user_data.close()
+
+		#populate items:
+		item_data=open(saved_item_params)
+		for line in item_data:
+			record=line[0:len(line)-1].split(self.delimitter)
+			key=record.pop(0)
+			params=np.array(map(float,record))
+			self.items[key]=params
+
+		item_data.close()
+
+	def clear_model(self):
+		"""
+		
+		clear the user and item parameters
+		
+		"""
+		del self.items, self.users
+		self.items=dict()
+		self.users=dict()
 
     def validate_sgd(self,test_file_path):
         """
