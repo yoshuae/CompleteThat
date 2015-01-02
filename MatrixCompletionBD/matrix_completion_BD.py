@@ -22,6 +22,7 @@ build_matrix():= for smaller data build complete matrix in pandas df or numpy ma
 class MatrixCompletionBD:		
 	#initialize Matrix Completion BD object
 	def __init__(self,file_path='/Users/joshua/Desktop/School/Big_Data_Analytics/Data/user_movie_data/movie_train.txt',delimitter='\t',*args, **kwargs):
+		
 		self.file=file_path
 		self.delimitter='\t'
 		## initialize users and objects dictionaries
@@ -30,6 +31,7 @@ class MatrixCompletionBD:
 		
 	# shuffle line of file for sgd method, improves performance/convergence
 	def shuffle_file(self,batch_size=50000):
+		
 		data=open(self.file)
 		temp_file=open('temp_shuffled.txt','w')
 		temp_array=[]
@@ -56,6 +58,7 @@ class MatrixCompletionBD:
 		
 	# split input file randomly into training and test set for cross validation
 	def file_split(self,percent_train=.80, train_file='data_train.csv', test_file='data_test.csv'):
+		
 		train=open(train_file,'w')
 		test=open(test_file,'w')
 		temp_file=open(self.file)
@@ -71,7 +74,7 @@ class MatrixCompletionBD:
 		print('test file written as ' + test_file)
 		temp_file.close()
 		
-	def train_sgd(self,dimension=6,init_step_size=.01,reltol=.0001, maxiter=1000,batch_size_sgd=50000,shuffle=True):
+	def train_sgd(self,dimension=6,init_step_size=.001,min_step=.000001, reltol=.001, maxiter=1000,batch_size_sgd=50000,shuffle=True):
 		
 		ratings=[]
 		alpha=init_step_size
@@ -83,8 +86,8 @@ class MatrixCompletionBD:
 
 			data=open(self.file)
 			total_err=[0]
-			if alpha>=.000001: alpha*=.3
-			else: alpha=.000001
+			if alpha>=min_step: alpha*=.3
+			else: alpha=min_step
 			
 			for line in data:
 				#line=data.readline()
@@ -110,9 +113,9 @@ class MatrixCompletionBD:
 				#else:
 					counter+=1
 					if record[0] not in self.users:
-						self.users[record[0]]=np.random.rand(dimension)
+						self.users[record[0]]=np.random.rand(dimension)*12
 					if record[1] not in self.items:
-						self.items[record[1]]=np.random.rand(dimension)
+						self.items[record[1]]=np.random.rand(dimension)*12
 					#self.users[record[0]][params]=np.random.rand(dimension)
 					#self.items[record[1]][params]=np.random.rand(dimension)
 					#self.users[record[0]][count]+=1
