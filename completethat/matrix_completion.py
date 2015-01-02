@@ -256,152 +256,150 @@ class MatrixCompletion:
             raise NameError("Algorithm name not recognized")
 
 class MatrixCompletionBD:		
-    """ 
-    A general class for matrix factorization via stochastic gradient descent
+	""" 
+	A general class for matrix factorization via stochastic gradient descent
 
-    Class members
-    ==================== 
-    file: three column file of user, item, and value to build models
-
-
-    Class methods
-    ====================
-    train_sgd():= method to complete the matrix via sgd
-    shuffle_file():= method to 'psuedo' shuffle input file in chunks
-    file_split():= method to split input file into training and test set
-    save_model():= save user and items parameters to text file
-    validate_sgd():= validate sgd model on test set 
-    build_matrix():= for smaller data build complete matrix in pandas df or numpy matrix? 
-    """
+	Class members
+	==================== 
+	file: three column file of user, item, and value to build models
 
 
-    def __init__(self,file_path,delimitter='\t',*args, **kwargs):
-        """ 
-            Object constructor
-            Initialize Matrix Completion BD object
-        """
-        self._file = file_path
-        self._delimitter = '\t'
-        self._users = dict()
-        self._items = dict()
+	Class methods
+	====================
+	train_sgd():= method to complete the matrix via sgd
+	shuffle_file():= method to 'psuedo' shuffle input file in chunks
+	file_split():= method to split input file into training and test set
+	save_model():= save user and items parameters to text file
+	validate_sgd():= validate sgd model on test set 
+	build_matrix():= for smaller data build complete matrix in pandas df or numpy matrix? 
+	"""
 
-    def shuffle_file(self,batch_size=50000):
-        """
 
-        Shuffle line of file for sgd method, improves performance/convergence
+	def __init__(self,file_path,delimitter='\t',*args, **kwargs):
+		 """ 
+		     Object constructor
+		     Initialize Matrix Completion BD object
+		 """
+		 self._file = file_path
+		 self._delimitter = '\t'
+		 self._users = dict()
+		 self._items = dict()
 
-        """
-        data = open(self._file)
-        temp_file=open('temp_shuffled.txt','w')
-        temp_array=[]
-        counter=0
-        for line in data:
-            counter+=1
-            temp_array.append(line)
-            if counter==batch_size : 	
-                random.shuffle(temp_array)
-                for entry in temp_array:
-                    temp_file.write(entry)
-                temp_array=[]
-                counter=0
+	def shuffle_file(self,batch_size=50000):
+		"""
 
-        if len(temp_array)>0:
-            random.shuffle(temp_array)
-            for entry in temp_array:
-                temp_file.write(entry)
+		Shuffle line of file for sgd method, improves performance/convergence
 
-        data.close()
-        temp_file.close()
-        system_string='mv temp_shuffled.txt ' + self.file 
-        os.system(system_string)
+		"""
+		data = open(self._file)
+		temp_file=open('temp_shuffled.txt','w')
+		temp_array=[]
+		counter=0
+		for line in data:
+			counter+=1
+			temp_array.append(line)
+			if counter==batch_size : 	
+				random.shuffle(temp_array)
+				for entry in temp_array:
+					temp_file.write(entry)
+				temp_array=[]
+				counter=0
 
-    def file_split(self,percent_train=.80, train_file='data_train.csv', test_file='data_test.csv'):
-        """
+		if len(temp_array)>0:
+			random.shuffle(temp_array)
+			for entry in temp_array:
+				temp_file.write(entry)
 
-        split input file randomly into training and test set for cross validation
+		data.close()
+		temp_file.close()
+		system_string='mv temp_shuffled.txt ' + self.file 
+		os.system(system_string)
 
-        """
-        train=open(train_file,'w')
-        test=open(test_file,'w')
-        temp_file=open(self.file)
-        for line in temp_file:
-            if np.random.rand()<percent_train:
-                train.write(line)
-            else:
-                test.write(line)
+	def file_split(self,percent_train=.80, train_file='data_train.csv', test_file='data_test.csv'):
+		"""
 
-        train.close()
-        test.close()
-        print('test file written as ' + train_file)
-        print('test file written as ' + test_file)
-        temp_file.close()
+		split input file randomly into training and test set for cross validation
 
-    def train_sgd(self,dimension=6,init_step_size=.01,min_step=.000001,reltol=.05,rand_init_scalar=1, maxiter=100,batch_size_sgd=50000,shuffle=True):
+		"""
+		train=open(train_file,'w')
+		test=open(test_file,'w')
+		temp_file=open(self.file)
+		for line in temp_file:
+			if np.random.rand()<percent_train:
+				train.write(line)
+			else:
+				test.write(line)
 
-        alpha=init_step_size
-        iteration=0
-        delta_err=1
-        new_mse=reltol+10
-        counter=0
+		train.close()
+		test.close()
+		print('test file written as ' + train_file)
+		print('test file written as ' + test_file)
+		temp_file.close()
 
-        while iteration != maxiter and delta_err > reltol :
+	def train_sgd(self,dimension=6,init_step_size=.01,min_step=.000001,reltol=.05,rand_init_scalar=1, maxiter=100,batch_size_sgd=50000,shuffle=True):
 
-            data=open(self.file)
-            total_err=[0]
-            if alpha>=min_step: alpha*=.3
-            else: alpha=min_step
+		alpha=init_step_size
+		iteration=0
+		delta_err=1
+		new_mse=reltol+10
+		counter=0
 
-            for line in data:
-                
-                    record=line[0:len(line)-1].split(self.delimitter)
-                    record[2]=float(record[2])
-                    
-                    # format : user, movie,5-point-ratings
-                    ratings.append(record[2])
-                    
-                    #if record[0] in self.users and record[1] in self.items :
-                    try:
-                        # do some updating
-                            # updates
-                            error=record[2]-4-np.dot(self.users[record[0]],self.items[record[1]])
-                            self.users[record[0]]=self.users[record[0]]+alpha*2*error*self.items[record[1]]
-                            self.items[record[1]]=self.items[record[1]]+alpha*2*error*self.users[record[0]]
-                            total_err.append(error**2)
-                    except:
-                        #else:
-                            counter+=1
-                            if record[0] not in self.users:
-                                self.users[record[0]]=np.random.rand(dimension)*rand_init_scalar
-                            if record[1] not in self.items:
-                                self.items[record[1]]=np.random.rand(dimension)*rand_init_scalar
+		while iteration != maxiter and delta_err > reltol :
 
-            data.close()
-            if shuffle: 
-                self.shuffle_file(batch_size=batch_size_sgd)
-            iteration+=1
-            old_mse=new_mse
-            new_mse=sum(total_err)*1.0/len(total_err)
-            delta_err=abs(old_mse-new_mse)
+			data=open(self.file)
+			total_err=[0]
+			if alpha>=min_step: alpha*=.3
+			else: alpha=min_step
+
+			for line in data:
+
+				record=line[0:len(line)-1].split(self.delimitter)
+				record[2]=float(record[2])
+				# format : user, movie,5-point-ratings
+				ratings.append(record[2])
+				#if record[0] in self.users and record[1] in self.items :
+				try:
+					# do some updating
+					# updates
+					error=record[2]-4-np.dot(self.users[record[0]],self.items[record[1]])
+					self.users[record[0]]=self.users[record[0]]+alpha*2*error*self.items[record[1]]
+					self.items[record[1]]=self.items[record[1]]+alpha*2*error*self.users[record[0]]
+					total_err.append(error**2)
+				except:
+					#else:
+					counter+=1
+					if record[0] not in self.users:
+						self.users[record[0]]=np.random.rand(dimension)*rand_init_scalar
+					if record[1] not in self.items:
+						self.items[record[1]]=np.random.rand(dimension)*rand_init_scalar
+
+			data.close()
+			if shuffle: 
+				self.shuffle_file(batch_size=batch_size_sgd)
+		iteration+=1
+		old_mse=new_mse
+		new_mse=sum(total_err)*1.0/len(total_err)
+		delta_err=abs(old_mse-new_mse)
 
     
-    def save_model(self,user_out='user_params.txt',item_out='item_params.txt'):
-        """
-        save model user and item parameters to text file	
-        user_key, user_vector entries
-        item_key, item_vector entries 
-        """
-        users=open(user_out,'w')
-        items=open(item_out,'w')
-        for key in self.users:
-            user_string= key+ self.delimitter + self.delimitter.join(map(str,list(self.users[key]))) + '\n'
-            users.write(user_string)
+	def save_model(self,user_out='user_params.txt',item_out='item_params.txt'):
+		"""
+		save model user and item parameters to text file	
+		user_key, user_vector entries
+		item_key, item_vector entries 
+		"""
+		users=open(user_out,'w')
+		items=open(item_out,'w')
+		for key in self.users:
+			user_string= key+ self.delimitter + self.delimitter.join(map(str,list(self.users[key]))) + '\n'
+			users.write(user_string)
 
-            for key in self.items:
-                item_string=key+ self.delimitter + self.delimitter.join(map(str,list(self.items[key]))) + '\n'
-                items.write(item_string)
+		for key in self.items:
+			item_string=key+ self.delimitter + self.delimitter.join(map(str,list(self.items[key]))) + '\n'
+			items.write(item_string)
 
-        users.close()
-        items.close()
+		users.close()
+		items.close()
 
 	## read saved model, particularly useful for fitting very large files! 
 	def read_model(self,dimension=6,saved_user_params='user_params.txt',saved_item_params='item_params.txt'):
@@ -440,20 +438,20 @@ class MatrixCompletionBD:
 		self.items=dict()
 		self.users=dict()
 
-    def validate_sgd(self,test_file_path):
-        """
+	def validate_sgd(self,test_file_path):
+		"""
 
-        run model on test/validation set	
+		run model on test/validation set	
 
-        """
-        mse=[]
-        test_set=open(test_file_path)
-        for line in test_set: 
-            record=line[0:len(line)-1].split(self._delimitter)
-            record[2]=float(record[2])
-            error=record[2]-4-np.dot(self.users[record[0]],self.items[record[1]])
-            mse.append(error**2)
-        return sum(mse)/len(mse)
+		"""
+		mse=[]
+		test_set=open(test_file_path)
+		for line in test_set: 
+			record=line[0:len(line)-1].split(self._delimitter)
+			record[2]=float(record[2])
+			error=record[2]-4-np.dot(self.users[record[0]],self.items[record[1]])
+			mse.append(error**2)
+		return sum(mse)/len(mse)
 
-    def build_matrix(self):
-        pass
+	def build_matrix(self):
+		pass
