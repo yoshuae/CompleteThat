@@ -363,7 +363,7 @@ class MatrixCompletionBD:
 				try:
 					# do some updating
 					# updates
-					error=record[2]-4-np.dot(self._users[record[0]],self._items[record[1]])
+					error=record[2]-np.dot(self._users[record[0]],self._items[record[1]])
 					self._users[record[0]]=self._users[record[0]]+alpha*2*error*self._items[record[1]]
 					self._items[record[1]]=self._items[record[1]]+alpha*2*error*self._users[record[0]]
 					total_err.append(error**2)
@@ -456,12 +456,18 @@ class MatrixCompletionBD:
 
 		"""
 		mse=[]
+		counter=0
 		test_set=open(test_file_path)
 		for line in test_set: 
 			record=line[0:len(line)-1].split(self._delimitter)
 			record[2]=float(record[2])
-			error=record[2]-4-np.dot(self._users[record[0]],self._items[record[1]])
-			mse.append(error**2)
+			try:
+				error=record[2]-np.dot(self._users[record[0]],self._items[record[1]])
+				mse.append(error**2)
+			except:
+				counter+=1
+		
+		if counter>0: print('Items/Users Key Errors: %f ' % counter )
 		# returns Mean Squared Error
 		return sum(mse)/len(mse)
 
