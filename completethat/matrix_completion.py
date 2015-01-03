@@ -1,5 +1,5 @@
 import numpy as np
-import os
+import os, random,time
 from scipy import linalg
 
 class MatrixCompletion:
@@ -312,7 +312,7 @@ class MatrixCompletionBD:
 
 		data.close()
 		temp_file.close()
-		system_string='mv temp_shuffled.txt ' + self.file 
+		system_string='mv temp_shuffled.txt ' + self._file 
 		os.system(system_string)
 
 	def file_split(self,percent_train=.80, train_file='data_train.csv', test_file='data_test.csv'):
@@ -323,7 +323,7 @@ class MatrixCompletionBD:
 		"""
 		train=open(train_file,'w')
 		test=open(test_file,'w')
-		temp_file=open(self.file)
+		temp_file=open(self._file)
 		for line in temp_file:
 			if np.random.rand()<percent_train:
 				train.write(line)
@@ -336,24 +336,26 @@ class MatrixCompletionBD:
 		print('test file written as ' + test_file)
 		temp_file.close()
 
-	def train_sgd(self,dimension=6,init_step_size=.01,min_step=.000001,reltol=.05,rand_init_scalar=1, maxiter=100,batch_size_sgd=50000,shuffle=True):
-
+	def train_sgd(self,dimension=6,init_step_size=.01,min_step=.000001,reltol=.05,rand_init_scalar=1, maxiter=100,batch_size_sgd=50000,shuffle=True,print_output=False):
+		
+		init_time=time.time()
 		alpha=init_step_size
 		iteration=0
 		delta_err=1
 		new_mse=reltol+10
 		counter=0
-
+		ratings=[]
+		
 		while iteration != maxiter and delta_err > reltol :
 
-			data=open(self.file)
+			data=open(self._file)
 			total_err=[0]
 			if alpha>=min_step: alpha*=.3
 			else: alpha=min_step
 
 			for line in data:
 
-				record=line[0:len(line)-1].split(self.delimitter)
+				record=line[0:len(line)-1].split(self._delimitter)
 				record[2]=float(record[2])
 				# format : user, movie,5-point-ratings
 				ratings.append(record[2])
@@ -361,25 +363,34 @@ class MatrixCompletionBD:
 				try:
 					# do some updating
 					# updates
-					error=record[2]-4-np.dot(self.users[record[0]],self.items[record[1]])
-					self.users[record[0]]=self.users[record[0]]+alpha*2*error*self.items[record[1]]
-					self.items[record[1]]=self.items[record[1]]+alpha*2*error*self.users[record[0]]
+					error=record[2]-4-np.dot(self._users[record[0]],self._items[record[1]])
+					self._users[record[0]]=self._users[record[0]]+alpha*2*error*self._items[record[1]]
+					self._items[record[1]]=self._items[record[1]]+alpha*2*error*self._users[record[0]]
 					total_err.append(error**2)
 				except:
 					#else:
 					counter+=1
-					if record[0] not in self.users:
-						self.users[record[0]]=np.random.rand(dimension)*rand_init_scalar
-					if record[1] not in self.items:
-						self.items[record[1]]=np.random.rand(dimension)*rand_init_scalar
+					if record[0] not in self._users:
+						self._users[record[0]]=np.random.rand(dimension)*rand_init_scalar
+					if record[1] not in self._items:
+						self._items[record[1]]=np.random.rand(dimension)*rand_init_scalar
 
 			data.close()
 			if shuffle: 
 				self.shuffle_file(batch_size=batch_size_sgd)
-		iteration+=1
-		old_mse=new_mse
-		new_mse=sum(total_err)*1.0/len(total_err)
-		delta_err=abs(old_mse-new_mse)
+			iteration+=1
+			old_mse=new_mse
+			new_mse=sum(total_err)*1.0/len(total_err)
+			delta_err=abs(old_mse-new_mse)
+			if print_output and iteration%10==0: 
+				print ('Delta Error: %f ' % delta_err)
+				
+		#Printing Final Output		
+		if print_output:
+			print ('Iterations: %f ' % iteration)
+			print ('MSE: %f ' % new_mse)
+			minutes=(time.time()-init_time)/60
+			print ('Total Minutes to Run: %f' % minutes)
 
     
 	def save_model(self,user_out='user_params.txt',item_out='item_params.txt'):
@@ -390,12 +401,12 @@ class MatrixCompletionBD:
 		"""
 		users=open(user_out,'w')
 		items=open(item_out,'w')
-		for key in self.users:
-			user_string= key+ self.delimitter + self.delimitter.join(map(str,list(self.users[key]))) + '\n'
+		for key in self._users:
+			user_string= key+ self._delimitter + self._delimitter.join(map(str,list(self._users[key]))) + '\n'
 			users.write(user_string)
 
-		for key in self.items:
-			item_string=key+ self.delimitter + self.delimitter.join(map(str,list(self.items[key]))) + '\n'
+		for key in self._items:
+			item_string=key+ self._delimitter + self._delimitter.join(map(str,list(self._items[key]))) + '\n'
 			items.write(item_string)
 
 		users.close()
@@ -411,20 +422,20 @@ class MatrixCompletionBD:
 		#populate users:
 		user_data=open(saved_user_params)
 		for line in user_data:
-			record=line[0:len(line)-1].split(self.delimitter)
+			record=line[0:len(line)-1].split(self._delimitter)
 			key=record.pop(0)
 			params=np.array(map(float,record))
-			self.users[key]=params
+			self._users[key]=params
 
 		user_data.close()
 
 		#populate items:
 		item_data=open(saved_item_params)
 		for line in item_data:
-			record=line[0:len(line)-1].split(self.delimitter)
+			record=line[0:len(line)-1].split(self._delimitter)
 			key=record.pop(0)
 			params=np.array(map(float,record))
-			self.items[key]=params
+			self._items[key]=params
 
 		item_data.close()
 
@@ -434,14 +445,14 @@ class MatrixCompletionBD:
 		clear the user and item parameters
 		
 		"""
-		del self.items, self.users
-		self.items=dict()
-		self.users=dict()
+		del self._items, self._users
+		self._items=dict()
+		self._users=dict()
 
 	def validate_sgd(self,test_file_path):
 		"""
 
-		run model on test/validation set	
+		run model on test/validation set, returns MSE
 
 		"""
 		mse=[]
@@ -449,8 +460,9 @@ class MatrixCompletionBD:
 		for line in test_set: 
 			record=line[0:len(line)-1].split(self._delimitter)
 			record[2]=float(record[2])
-			error=record[2]-4-np.dot(self.users[record[0]],self.items[record[1]])
+			error=record[2]-4-np.dot(self._users[record[0]],self._items[record[1]])
 			mse.append(error**2)
+		# returns Mean Squared Error
 		return sum(mse)/len(mse)
 
 	def build_matrix(self):
