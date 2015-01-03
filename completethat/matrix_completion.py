@@ -293,6 +293,12 @@ class MatrixCompletionBD:
 		"""
 		data = open(self._file)
 		temp_file=open('temp_shuffled.txt','w')
+		try:
+			temp=open('backup_'+self._file)
+			temp.close()
+		except:
+			os.system('cp ' +self._file + ' backup_'+self._file)
+	
 		temp_array=[]
 		counter=0
 		for line in data:
