@@ -1,5 +1,7 @@
 import numpy as np
 import os, random, time
+from scipy.sparse import csc_matrix
+from scipy.sparse import linalg as linalg_s
 from scipy import linalg
 
 class MatrixCompletion:
@@ -93,22 +95,28 @@ class MatrixCompletion:
         # Get shape and Omega
         m, n = M.shape
         if r == None:
-            r = min(m, n, 5)
+            r = min(m, n, 50)
     
+        # Set relative error
         Omega = ~np.isnan(M)
-        relres = reltol * linalg.norm(M[Omega]) #set relative error
+        frob_norm_data = linalg.norm(M[Omega])
+        relres = reltol * frob_norm_data
     
         # Initialize
-        X = np.random.randn(m, r)
-        Y = np.random.randn(r, n)
+        I, J = np.where(Omega)
+        M_omega =  csc_matrix((M[Omega], (I, J)), shape=M.shape)
+        U, s, V = linalg_s.svds(M_omega, r)
+        S = np.diag(s)
+        X = np.dot(U, S)
+        Y = V
         itres = np.zeros((maxiter+1, 1)) 
     
         XY = np.dot(X, Y)
         diff_on_omega = M[Omega] - XY[Omega]
         res = linalg.norm(diff_on_omega)
         iter = 0
-        itres[iter] = res
-    
+        itres[iter] = res/frob_norm_data 
+
         while iter < maxiter and res >= relres:
             
             # Gradient for X
@@ -140,13 +148,13 @@ class MatrixCompletion:
             
             res = linalg.norm(diff_on_omega)
             iter = iter + 1
-            itres[iter] = res
+            itres[iter] = res/frob_norm_data
     
         M_out = np.dot(X, Y)
     
-        out = [iter, itres[iter]/linalg.norm(M[Omega])]
+        out_info = [iter, itres]
     
-        return M_out, out    
+        return M_out, out_info    
 
     def _sASD(self, M, r = None, reltol=1e-5, maxiter=10000):
         """
@@ -176,23 +184,29 @@ class MatrixCompletion:
         # Get shape and Omega
         m, n = M.shape
         if r == None:
-            r = min(m, n, 5)
+            r = min(m, n, 50)
     
+        # Set relative error
         Omega = ~np.isnan(M)
-        relres = reltol * linalg.norm(M[Omega]) #set relative error
+        frob_norm_data = linalg.norm(M[Omega])
+        relres = reltol * frob_norm_data
     
         # Initialize
         identity = np.identity(r);
-        X = np.random.randn(m, r)
-        Y = np.random.randn(r, n)
+        I, J = np.where(Omega)
+        M_omega =  csc_matrix((M[Omega], (I, J)), shape=M.shape)
+        U, s, V = linalg_s.svds(M_omega, r)
+        S = np.diag(s)
+        X = np.dot(U, S)
+        Y = V
         itres = np.zeros((maxiter+1, 1)) 
     
         XY = np.dot(X, Y)
         diff_on_omega = M[Omega] - XY[Omega]
         res = linalg.norm(diff_on_omega)
         iter = 0
-        itres[iter] = res
-    
+        itres[iter] = res/frob_norm_data
+
         while iter < maxiter and res >= relres:
     
             # Gradient for X
@@ -232,20 +246,20 @@ class MatrixCompletion:
             # Update iteration information
             res = linalg.norm(diff_on_omega)
             iter = iter + 1
-            itres[iter] = res 
+            itres[iter] = res/frob_norm_data 
     
         M_out = np.dot(X, Y)
     
-        out = [iter, itres[iter]/linalg.norm(M[Omega])]
+        out_info = [iter, itres]
     
-        return M_out, out
+        return M_out, out_info
 
     def complete_it(self, algo_name, r = None, reltol=1e-5, maxiter=5000):
  
         """ Function to solve the optimization with the choosen algorithm 
 
             Input:
-             1) algo_name: Algorithm name (ASD, sASD, SVT)
+             1) algo_name: Algorithm name (ASD, sASD, ect)
              2) r: rank of the matrix if performing alternating algorithm
         """
         if algo_name == "ASD":
@@ -342,7 +356,7 @@ class MatrixCompletionBD:
 		print('test file written as ' + test_file)
 		temp_file.close()
 
-	def train_sgd(self,dimension=6,init_step_size=.01,min_step=.000001,reltol=.05,rand_init_scalar=1, maxiter=100,batch_size_sgd=50000,shuffle=True,print_output=False):
+	def train_sgd(self,dimension=6,init_step_size=.01,min_step=1e-5,reltol=.05,rand_init_scalar=1, maxiter=100,batch_size_sgd=50000,shuffle=True,print_output=False):
 		
 		init_time=time.time()
 		alpha=init_step_size

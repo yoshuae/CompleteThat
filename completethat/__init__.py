@@ -18,11 +18,11 @@ Where, M represents the data matrix and \Omega represents the set of p observed 
     >>> out_info = problem.get_out() #Extra info (iterations, ect)
 
     # MatrixCompletionBD
-    >>>from matrix_completion_BD import MatrixCompletionBD 
-    >>>temp=MatrixCompletionBD('input_data.txt')
-    >>>temp.train_sgd(dimension=6,init_step_size=.01,min_step=.000001, reltol=.001,rand_init_scale=10,   maxiter=1000,batch_size_sgd=50000,shuffle=True):
-    >>>temp.validate_sgd('test_data.txt')
-    >>>temp.save_model()
+    >>> from completethat import MatrixCompletionBD 
+    >>> temp=MatrixCompletionBD('input_data.txt')
+    >>> temp.train_sgd(dimension=6,init_step_size=.01,min_step=.000001, reltol=.001,rand_init_scale=10,   maxiter=1000,batch_size_sgd=50000,shuffle=True):
+    >>> temp.validate_sgd('test_data.txt')
+    >>> temp.save_model()
 
 """
 from matrix_completion import MatrixCompletion

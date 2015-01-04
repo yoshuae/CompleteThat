@@ -19,7 +19,13 @@ Usage
 >>> problem = MatrixCompletion(M)
 >>> problem.complete_it(algo_name)
 >>> X = problem.get_matrix()
->>> out_info = problem.get_out() #Extrainformation (number of iterations, ect)
+>>> out_info = problem.get_out() 
+
+>>> from completethat import MatrixCompletionBD
+>>> problem = MatrixCompletionBD('input_data.txt')
+>>> problem.train_sgd(dimension=6,init_step_size=.01,min_step=.000001, reltol=.001,rand_init_scale=10,   maxiter=1000,batch_size_sgd=50000,shuffle=True)
+>>> problem.validate_sgd('test_data.txt')
+>>> problem.save_model()
 
 Authors 
 ====================
