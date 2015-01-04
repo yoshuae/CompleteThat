@@ -1,5 +1,6 @@
 CompleteThat (v0.1dev) 
 ====================
+
 CompleteThat is a python package that solves the low rank matrix completion
 problem. Given a low rank matrix with partial entries the package solves an
 optimization problem to estimate the missing entries.
@@ -13,7 +14,7 @@ Frobenius norm of the objective matrix) of the following problem:
   observed entries of M
 
 Usage
-====================
+-------
 
 >>> from completethat import MatrixCompletion
 >>> problem = MatrixCompletion(M)
@@ -28,12 +29,12 @@ Usage
 >>> problem.save_model()
 
 Authors 
-====================
+-------
 
 This package was written by Joshua Edgerton and Esteban Fajardo
 
 Acknowledgments
-====================
+-------
 
 This package is the result of the final project for the class EEOR E4650: Convex
 Optimization at Columbia University, Fall 2014. We would like to thank the
