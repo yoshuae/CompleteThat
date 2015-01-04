@@ -2,6 +2,7 @@ import numpy as np
 import os, random, time
 from scipy.sparse import csc_matrix
 from scipy.sparse import linalg as linalg_s
+import os, random, time
 from scipy import linalg
 
 class MatrixCompletion:
@@ -308,10 +309,10 @@ class MatrixCompletionBD:
 		data = open(self._file)
 		temp_file=open('temp_shuffled.txt','w')
 		try:
-			temp=open('backup_'+self._file)
+			temp=open('backup_data_file.txt')
 			temp.close()
 		except:
-			os.system('cp ' +self._file + ' backup_'+self._file)
+			os.system('cp ' +self._file + ' backup_data_file.txt')
 	
 		temp_array=[]
 		counter=0
