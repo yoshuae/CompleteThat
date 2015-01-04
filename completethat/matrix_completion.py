@@ -1,5 +1,4 @@
 import numpy as np
-import os, random, time
 from scipy.sparse import csc_matrix
 from scipy.sparse import linalg as linalg_s
 import os, random, time
@@ -24,7 +23,6 @@ class MatrixCompletion:
     number, convergence, objective function)
 
     """
-
     def __init__(self, X,*args, **kwargs):
         """ Constructor for the problem instance
 
@@ -37,7 +35,6 @@ class MatrixCompletion:
                     X[4][4] = np.nan
 
         """
-
         # Initialization of the members
         self._M = X
         self._X = np.array(X, copy = True) #Initialize with ini data matrix
