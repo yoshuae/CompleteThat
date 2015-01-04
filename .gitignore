@@ -13,3 +13,6 @@
 
 # Mac specific files
 .DS_Store
+
+# Setuptools build folder
+/build/

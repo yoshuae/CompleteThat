@@ -14,7 +14,7 @@ setup(
       license='BSD',
       packages=['completethat'],
       install_requires=[
-          'scipy', 'numpy', 'os', 'random', 'time'
+          'scipy', 'numpy', 'os', 'random'
       ],
       classifiers=[
          'Development Status :: 3 - Alpha',
