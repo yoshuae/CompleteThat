@@ -1,5 +1,5 @@
 import numpy as np
-import os, random,time
+import os, random, time
 from scipy import linalg
 
 class MatrixCompletion:
