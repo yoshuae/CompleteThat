@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.11.20)  4 JAN 2015 23:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.11.20)  5 JAN 2015 10:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -416,40 +416,68 @@ Package: booktabs 2005/04/14 v1.61803 publication quality tables
 \@lastruleclass=\count129
 \@thisrulewidth=\dimen151
 )
+(/usr/local/texlive/2014/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
+Package: algpseudocode 
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count130
+\c@ALG@rem=\count131
+\c@ALG@nested=\count132
+\ALG@tlm=\skip50
+\ALG@thistlm=\skip51
+\c@ALG@Lnr=\count133
+\c@ALG@blocknr=\count134
+\c@ALG@storecount=\count135
+\c@ALG@tmpcounter=\count136
+\ALG@tmplength=\skip52
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (/usr/local/texlive/2014/texmf-dist/tex/latex/algorithms/algorithm.sty
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
+nment
+\@float@every@algorithm=\toks27
+\c@algorithm=\count137
+)
 (/usr/local/texlive/2014/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2014/09/06 1.5e listings language file
 )
 (./defs.tex) (./article.aux)
 \openout1 = `article.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
 
 (/usr/local/texlive/2014/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count130
+\scratchcounter=\count138
 \scratchdimen=\dimen152
 \scratchbox=\box34
-\nofMPsegments=\count131
-\nofMParguments=\count132
-\everyMPshowfont=\toks27
-\MPscratchCnt=\count133
+\nofMPsegments=\count139
+\nofMParguments=\count140
+\everyMPshowfont=\toks28
+\MPscratchCnt=\count141
 \MPscratchDim=\dimen153
-\MPnumerator=\count134
-\makeMPintoPDFobject=\count135
-\everyMPtoPDFconversion=\toks28
+\MPnumerator=\count142
+\makeMPintoPDFobject=\count143
+\everyMPtoPDFconversion=\toks29
 ) (/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
 
@@ -465,9 +493,9 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\c@lstlisting=\count136
+\c@lstlisting=\count144
 \AtBeginShipoutBox=\box35
-Package hyperref Info: Link coloring OFF on input line 54.
+Package hyperref Info: Link coloring OFF on input line 60.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -475,11 +503,11 @@ Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 (/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count137
+\c@section@level=\count145
 )
-LaTeX Info: Redefining \ref on input line 54.
-LaTeX Info: Redefining \pageref on input line 54.
-LaTeX Info: Redefining \nameref on input line 54.
+LaTeX Info: Redefining \ref on input line 60.
+LaTeX Info: Redefining \pageref on input line 60.
+LaTeX Info: Redefining \nameref on input line 60.
 
 (./article.out) (./article.out)
 \@outlinefile=\write4
@@ -488,17 +516,17 @@ LaTeX Info: Redefining \nameref on input line 54.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 57.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 63.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 57.
+LaTeX Font Info:    Try loading font information for U+msa on input line 63.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 57.
+LaTeX Font Info:    Try loading font information for U+msb on input line 63.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -511,12 +539,27 @@ cle.toc)
 \openout5 = `article.toc'.
 
  [2] [3] [4]
-Overfull \hbox (34.24477pt too wide) in paragraph at lines 164--164
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
+put line 172.
+ [5] [6]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 236.
+
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 236.
+ [7]
+Overfull \hbox (34.24477pt too wide) in paragraph at lines 261--261
 []\OT1/pcr/m/n/12 >>> problem.train_sgd(dimension=6,init_step_size=.01,min_step
 =.000001,[] 
  []
 
-[5] [6] (./columbia_images.py
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[8] [9] (./columbia_images.py
 
 Package xcolor Warning: Incompatible color definition on input line 6.
 
@@ -604,14 +647,9 @@ Package xcolor Warning: Incompatible color definition on input line 9.
 
 Package xcolor Warning: Incompatible color definition on input line 9.
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 11.
-(/usr/local/texlive/2014/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 11.
 
-
 Package xcolor Warning: Incompatible color definition on input line 11.
 
 
@@ -743,79 +781,79 @@ Package xcolor Warning: Incompatible color definition on input line 29.
 
 Package xcolor Warning: Incompatible color definition on input line 29.
 
-) <figures/columbia1.png, id=112, 483.8075pt x 480.79625pt>
+) <figures/columbia1.png, id=143, 483.8075pt x 480.79625pt>
 File: figures/columbia1.png Graphic file (type png)
 
 <use figures/columbia1.png>
-Package pdftex.def Info: figures/columbia1.png used on input line 240.
+Package pdftex.def Info: figures/columbia1.png used on input line 337.
 (pdftex.def)             Requested size: 184.9429pt x 183.79024pt.
 
-<figures/columbia2.png, id=114, 483.8075pt x 480.79625pt>
+<figures/columbia2.png, id=145, 483.8075pt x 480.79625pt>
 File: figures/columbia2.png Graphic file (type png)
 
 <use figures/columbia2.png>
-Package pdftex.def Info: figures/columbia2.png used on input line 240.
+Package pdftex.def Info: figures/columbia2.png used on input line 337.
 (pdftex.def)             Requested size: 184.9429pt x 183.79024pt.
 
-<figures/columbia3.png, id=115, 483.8075pt x 480.79625pt>
+<figures/columbia3.png, id=146, 483.8075pt x 480.79625pt>
 File: figures/columbia3.png Graphic file (type png)
 
 <use figures/columbia3.png>
-Package pdftex.def Info: figures/columbia3.png used on input line 240.
+Package pdftex.def Info: figures/columbia3.png used on input line 337.
 (pdftex.def)             Requested size: 184.9429pt x 183.79024pt.
 
-<figures/columbia4.png, id=116, 483.8075pt x 480.79625pt>
+<figures/columbia4.png, id=147, 483.8075pt x 480.79625pt>
 File: figures/columbia4.png Graphic file (type png)
 
 <use figures/columbia4.png>
-Package pdftex.def Info: figures/columbia4.png used on input line 240.
+Package pdftex.def Info: figures/columbia4.png used on input line 337.
 (pdftex.def)             Requested size: 184.9429pt x 183.79024pt.
 
-<figures/columbia5.png, id=117, 483.8075pt x 480.79625pt>
+<figures/columbia5.png, id=148, 483.8075pt x 480.79625pt>
 File: figures/columbia5.png Graphic file (type png)
 
 <use figures/columbia5.png>
-Package pdftex.def Info: figures/columbia5.png used on input line 240.
+Package pdftex.def Info: figures/columbia5.png used on input line 337.
 (pdftex.def)             Requested size: 184.9429pt x 183.79024pt.
 
-<figures/columbia6.png, id=118, 483.8075pt x 480.79625pt>
+<figures/columbia6.png, id=149, 483.8075pt x 480.79625pt>
 File: figures/columbia6.png Graphic file (type png)
 
 <use figures/columbia6.png>
-Package pdftex.def Info: figures/columbia6.png used on input line 240.
+Package pdftex.def Info: figures/columbia6.png used on input line 337.
 (pdftex.def)             Requested size: 184.9429pt x 183.79024pt.
 
-<figures/columbia7.png, id=119, 483.8075pt x 480.79625pt>
+<figures/columbia7.png, id=150, 483.8075pt x 480.79625pt>
 File: figures/columbia7.png Graphic file (type png)
 
 <use figures/columbia7.png>
-Package pdftex.def Info: figures/columbia7.png used on input line 240.
+Package pdftex.def Info: figures/columbia7.png used on input line 337.
 (pdftex.def)             Requested size: 184.9429pt x 183.79024pt.
 
-<figures/columbia8.png, id=120, 483.8075pt x 480.79625pt>
+<figures/columbia8.png, id=151, 483.8075pt x 480.79625pt>
 File: figures/columbia8.png Graphic file (type png)
 
 <use figures/columbia8.png>
-Package pdftex.def Info: figures/columbia8.png used on input line 240.
+Package pdftex.def Info: figures/columbia8.png used on input line 337.
 (pdftex.def)             Requested size: 184.9429pt x 183.79024pt.
 
-<figures/columbia9.png, id=121, 483.8075pt x 480.79625pt>
+<figures/columbia9.png, id=152, 483.8075pt x 480.79625pt>
 File: figures/columbia9.png Graphic file (type png)
 
 <use figures/columbia9.png>
-Package pdftex.def Info: figures/columbia9.png used on input line 240.
+Package pdftex.def Info: figures/columbia9.png used on input line 337.
 (pdftex.def)             Requested size: 184.9429pt x 183.79024pt.
- [7
+ [10
 
-] [8 <./figures/columbia1.png> <./figures/columbia2.png> <./figures/columbia3.p
-ng> <./figures/columbia4.png> <./figures/columbia5.png> <./figures/columbia6.pn
-g> <./figures/columbia7.png> <./figures/columbia8.png> <./figures/columbia9.png
->] [9] (./article.bbl) [10]
-<./figures/code_scheme.pdf, id=194, 794.97pt x 614.295pt>
+] [11 <./figures/columbia1.png> <./figures/columbia2.png> <./figures/columbia3.
+png> <./figures/columbia4.png> <./figures/columbia5.png> <./figures/columbia6.p
+ng> <./figures/columbia7.png> <./figures/columbia8.png> <./figures/columbia9.pn
+g>] [12] (./article.bbl) [13]
+<./figures/code_scheme.pdf, id=225, 794.97pt x 614.295pt>
 File: ./figures/code_scheme.pdf Graphic file (type pdf)
 
 <use ./figures/code_scheme.pdf>
-Package pdftex.def Info: ./figures/code_scheme.pdf used on input line 266.
+Package pdftex.def Info: ./figures/code_scheme.pdf used on input line 363.
 (pdftex.def)             Requested size: 375.80544pt x 290.40588pt.
  (../code/completethat/matrix_completion.py
 
@@ -1076,7 +1114,7 @@ Package xcolor Warning: Incompatible color definition on input line 14.
 
 Package xcolor Warning: Incompatible color definition on input line 14.
 
-[11 <./figures/code_scheme.pdf>]
+[14 <./figures/code_scheme.pdf>]
 
 Package xcolor Warning: Incompatible color definition on input line 17.
 
@@ -2706,7 +2744,7 @@ Package xcolor Warning: Incompatible color definition on input line 64.
 
 Package xcolor Warning: Incompatible color definition on input line 64.
 
-[12]
+[15]
 
 Package xcolor Warning: Incompatible color definition on input line 66.
 
@@ -3850,7 +3888,7 @@ Package xcolor Warning: Incompatible color definition on input line 103.
 
 Package xcolor Warning: Incompatible color definition on input line 103.
 
-[13]
+[16]
 LaTeX Font Info:    Try loading font information for OML+cmr on input line 118.
 
  (/usr/local/texlive/2014/texmf-dist/tex/latex/base/omlcmr.fd
@@ -4339,7 +4377,7 @@ Package xcolor Warning: Incompatible color definition on input line 165.
 
 Package xcolor Warning: Incompatible color definition on input line 165.
 
-[14]
+[17]
 
 Package xcolor Warning: Incompatible color definition on input line 166.
 
@@ -5174,7 +5212,7 @@ Package xcolor Warning: Incompatible color definition on input line 215.
 
 Package xcolor Warning: Incompatible color definition on input line 215.
 
-[15]
+[18]
 
 Package xcolor Warning: Incompatible color definition on input line 222.
 
@@ -5619,7 +5657,7 @@ Package xcolor Warning: Incompatible color definition on input line 265.
 
 Package xcolor Warning: Incompatible color definition on input line 265.
 
-[16]
+[19]
 
 Package xcolor Warning: Incompatible color definition on input line 268.
 
@@ -6484,7 +6522,7 @@ Package xcolor Warning: Incompatible color definition on input line 312.
 
 Package xcolor Warning: Incompatible color definition on input line 312.
 
-[17]
+[20]
 
 Package xcolor Warning: Incompatible color definition on input line 333.
 
@@ -6704,7 +6742,7 @@ Package xcolor Warning: Incompatible color definition on input line 354.
 
 Package xcolor Warning: Incompatible color definition on input line 354.
 
-[18]
+[21]
 
 Package xcolor Warning: Incompatible color definition on input line 378.
 
@@ -6930,7 +6968,7 @@ Package xcolor Warning: Incompatible color definition on input line 408.
 
 Package xcolor Warning: Incompatible color definition on input line 408.
 
-[19]
+[22]
 
 Package xcolor Warning: Incompatible color definition on input line 409.
 
@@ -7426,7 +7464,7 @@ Package xcolor Warning: Incompatible color definition on input line 450.
 
 Package xcolor Warning: Incompatible color definition on input line 450.
 
-[20]
+[23]
 
 Package xcolor Warning: Incompatible color definition on input line 461.
 
@@ -7809,7 +7847,7 @@ Package xcolor Warning: Incompatible color definition on input line 3.
 
 Package xcolor Warning: Incompatible color definition on input line 3.
 
-[21]
+[24]
 
 Package xcolor Warning: Incompatible color definition on input line 5.
 
@@ -8942,7 +8980,7 @@ Package xcolor Warning: Incompatible color definition on input line 17.
 
 Package xcolor Warning: Incompatible color definition on input line 17.
 
-[22]
+[25]
 
 Package xcolor Warning: Incompatible color definition on input line 20.
 
@@ -9126,45 +9164,78 @@ Package xcolor Warning: Incompatible color definition on input line 24.
 
 Package xcolor Warning: Incompatible color definition on input line 24.
 
-)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 276.
- [23]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 276.
+) (../code/README.rst
+
+Package xcolor Warning: Incompatible color definition on input line 26.
+
+
+Package xcolor Warning: Incompatible color definition on input line 26.
+
+
+Package xcolor Warning: Incompatible color definition on input line 26.
+
+
+Package xcolor Warning: Incompatible color definition on input line 26.
+
+
+Package xcolor Warning: Incompatible color definition on input line 26.
+
+
+Package xcolor Warning: Incompatible color definition on input line 28.
+
+
+Package xcolor Warning: Incompatible color definition on input line 28.
+
+
+Package xcolor Warning: Incompatible color definition on input line 28.
+
+
+Package xcolor Warning: Incompatible color definition on input line 28.
+
+
+Package xcolor Warning: Incompatible color definition on input line 28.
+
+[26])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 375.
+ [27]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 375.
  (./article.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 276.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 276.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 375.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 375.
 Package rerunfilecheck Info: File `article.out' has not changed.
 (rerunfilecheck)             Checksum: 187623C8F69098329E7962AE8064E7BE;295.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 276.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 375.
  ) 
 Here is how much of TeX's memory you used:
- 10996 strings out of 493109
- 163587 string characters out of 6135003
- 494067 words of memory out of 5000000
- 13613 multiletter control sequences out of 15000+600000
+ 11683 strings out of 493109
+ 173307 string characters out of 6135003
+ 502623 words of memory out of 5000000
+ 14229 multiletter control sequences out of 15000+600000
  18344 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 53i,14n,92p,798b,1759s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 53i,14n,92p,1214b,1759s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/te
 xlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/tex
 live/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texl
 ive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texli
 ve/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texliv
-e/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/
-2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/20
-14/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2014
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2014/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2014/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2014/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2014/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2014/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2014/texmf-dist/
-fonts/type1/urw/courier/ucrr8a.pfb>
-Output written on article.pdf (23 pages, 2607516 bytes).
+e/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/
+2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/20
+14/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2014
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2014/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2014/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2014/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2014/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2014/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2014/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2014/texmf-dist/font
+s/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2014/texmf-dist/fonts
+/type1/urw/courier/ucrr8a.pfb>
+Output written on article.pdf (27 pages, 2644798 bytes).
 PDF statistics:
- 1040 PDF objects out of 1200 (max. 8388607)
- 955 compressed objects within 10 object streams
- 647 named destinations out of 1000 (max. 500000)
+ 1137 PDF objects out of 1200 (max. 8388607)
+ 1043 compressed objects within 11 object streams
+ 700 named destinations out of 1000 (max. 500000)
  99 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -11,6 +11,11 @@
 \usepackage[small,bf]{caption}
 \usepackage{float}
 \usepackage{booktabs}
+\usepackage{algpseudocode, algorithm}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\algorithmicuntil}{\textbf{Until:}}
+\renewcommand{\algorithmicrepeat}{\textbf{Repeat:}}
 
 \newcommand{\subf}[2]{%
   {\small\begin{tabular}[t]{@{}c@{}}
@@ -47,7 +52,8 @@
 
 \input defs.tex
 
-\title{\texttt{CompleteThat}: A python package for  low-rank matrix completion}
+\title{\texttt{CompleteThat}: A python package for  low-rank matrix completion\\EEOR E4650 Course Project
+}
 \author{Joshua Edgerton \and Esteban Fajardo}
 \date{January 5, 2014}
 
@@ -117,7 +123,7 @@ Alternative to nuclear norm minimization there have been many algorithms which a
     \end{array}
     \label{eq:frob_problem}
 \end{equation}
-where $X=YZ$ is the completed matrix and $Y\in \reals^{n_1\times r}, Z\in \reals^{r\times n_2}$ and $r$ represents the (hopefully small) rank of the matrix $X$.
+where $X=YZ$ is the completed matrix and $Y\in \reals^{n_1\times r}, Z\in \reals^{r\times n_2}$ and $r$ represents the (hopefully small) rank of the matrix $X$. The main point of this relaxation is the use of an alternating minimization scheme or Gauss-Seidel or 2-block coordinate descent method, where first $Y$ is fixed and then the problem is reduced to a convex, standard least squares problem on $Z$. Later, $Z$ is fixed and then the problem is reduced to a convex, standard least squares problem on $Y$.
 
 \section{Implementation}
 \texttt{CompleteThat} is a python package that solves the low rank matrix completion problem. Given a low rank matrix with partial entries the package solves an optimization problem to estimate the missing entries. We allow the user to choose between several optimization algorithms including two in memory based algorithms, alternating steepest descent and scaled alternating steepest descent, and one out of memory fitting procedure using stochastic gradient descent. We use extensively the numerical libraries \texttt{spicy} and \texttt{numpy}, and the current implementation includes two classes, \texttt{MatrixCompletion} for in memory based algorithms and \texttt{MatrixCompletionBD} for the memory fitting procedure. The package is available worldwide and can be
@@ -140,13 +146,104 @@ Where M is a MATLAB matrix with nan on the missing entries and \texttt{X(index) 
 
 \subsection*{Algorithms}
 \subsubsection*{Low rank matrix completion by alternating steepest descent methods}
+The  alternating steepest descent methods implemented on \texttt{CompleteThat} solve the Problem (\ref{eq:frob_problem}) above.  Let the objective function of the optimization problem $f: \reals^{n_1\times r}\times \reals^{r\times n_2} \rightarrow \reals$ be defined as
+\begin{equation}
+	f(Y,Z):=\frac{1}{2} \|P_{\Omega}(YZ) - P_{\Omega}(M)\|^2_F.
+	\label{eq:ASD_prob}
+\end{equation}
+
+To solve efficiently the above problem, Tanner and Wei~\cite{Tanner:2014} use a single step of simple line-search along the gradient descent directions.  Let us write $f(Y, Z)$ as $f_Z(Y)$ when $Z$ is held constant and $f_Y(Z)$ when $Y$ is held constant and let $t_y, t_z$ be the steepest descent step sizes for descent directions.
+
+The Alternating Steepest Descent Method (ASD) applies steepest gradient descent to $f(Y, Z)$ in (\ref{eq:ASD_prob}) alternatively with respect to $Y$ and $Z$. It can be shown that the directions of gradient ascent and the steepest descent step sizes are~\cite{Tanner:2014} :
+\[
+\nabla f_{Z}(Y) = -(P_{\Omega}(M) - P_{\Omega}(Y Z))Z^T\
+\]
+\[
+\nabla f_{Y}(Z) = -Y^T(P_{\Omega}(M)-P_{\Omega}(YZ)).
+\]
+\[
+t_{y} = \frac{\|  \nabla f_{Z}(Y) \|^2_F}{\| P_{\Omega}(\nabla f_{Z} (Y)Z\|^2_F}
+\]
+\[
+ t_{z} = \frac{\|  \nabla f_{Y}(Z) \|^2_F}{\| P_{\Omega}(Y \nabla f_Y (Z)) \|^2_F}
+\]
+
+\begin{algorithm}[h]
+\caption{Alternating Steepest Descent (ASD)~\cite{Tanner:2014}}
+\begin{algorithmic}
+\Require $r \in \reals, P_{\Omega}(M), Y_0\in \reals^{n_1\times r}, Z_0\in \reals^{r\times n_2}$
+\Repeat
+	\State $\nabla f_{Z_i}(Y_i) = -(P_{\Omega}(M) - P_{\Omega}(Y_i Z_i))Z_i^T, t_{y_i} = \frac{\|  \nabla f_{Z_i}(Y_i) \|^2_F}{\| P_{\Omega}(\nabla f_{Z_i} (Y_i)Z_i \|^2_F}$
+	\State $Y_{i+1} = Y_i - t_{y_i} f_{Z_i}(X_i)$
+	\State $\nabla f_{Y_{i+1}}(Z_i) = -Y^T_{i+1}(P_{\Omega}(M)-P_{\Omega}(Y_{i+1}Z_i)), t_{z_i} = \frac{\|  \nabla f_{Y_{i+1}}(Z_i) \|^2_F}{\| P_{\Omega}(Y_{i+1} \nabla f_Y{i+1} (Z_i)) \|^2_F}$
+	\State $Z_{i+1} = Z_i - t_{z_i}\nabla f_{Y_{i+1}}(Z_i)$
+	\State $i = i +1$
+\Until {termination criteria is not reached}
+\Ensure $X:= Y_i Z_i \in \reals^{n_1\times n_2}$
+\end{algorithmic}
+\end{algorithm}
+
+The Scaled Alternating Steepest Descent Method (sASD) is an accelerated version of ASD and uses a scaled gradient descent direction with exact line-search. Its main motivation for the scaled factors is the explicit expression for the Newton directions for the problem (\ref{eq:ASD_prob}) if all the entries in the matrix $M$ were know:
+\[
+(M - YZ)Z^T(ZZ^T)^{-1}
+\]
+\[
+(X^TX)^{-1}X^T(M-YZ)
+\]
+which are the gradient descent directions scaled by $(ZZ^T)^{-1}$ and $(X^TX)^{-1}$.
+
+\begin{algorithm}[h]
+\caption{Scaled Alternating Steepest Descent (sASD)~\cite{Tanner:2014}}
+\begin{algorithmic}
+\Require $r \in \reals, P_{\Omega}(M), Y_0\in \reals^{n_1\times r}, Z_0\in \reals^{r\times n_2}$
+\Repeat
+	\State $\nabla f_{Z_i}(Y_i) = -(P_{\Omega}(M) - P_{\Omega}(Y_i Z_i))Z_i^T$
+	\State $d_{y_i} = -\nabla f_{Z_i} (Y_i)(Z_iZ_i^T)^{-1}, t_{y_i} =\frac{ -\nabla f_{Z_i}(Y_i)\cdot d_{y_i}}{\| P_{\Omega} (d_{y_i}Z_i)\|_F^2}$
+	\State $Y_{i+1} = Y_i + t_{y_i}d_{y_i}$
+	\State $\nabla f_{Y_{i+1}} (Z_i) = - Y_{i+1}^T(P_{\Omega}(M) - P_{\Omega}(Y_{i+1}Z_i))$
+	\State $d_{z_i} = (Y_{i+1}^TY_{i+1}^{-1} \nabla f_{Y_{i+1}}(Z_i), t_{z_i} = \frac{-\nabla f_{Y_{i+1}}(Z_i)\cdot d_{z_i}}{\| P_{\Omega}(Y_{i+1}d_{z_i})\|_F^2}$
+	\State $Z_{i+1} = Z_i + t_{z_i} d_{z_i}$
+	\State $i = i + 1$
+\Until {termination criteria is not reached}
+\Ensure $X:= Y_i Z_i \in \reals^{n_1\times n_2}$
+\end{algorithmic}
+\end{algorithm}
+
 \subsubsection*{Low rank matrix completion by stochastic gradient descent}
+The formal problem as defined in the model section is stated in the language of linear algebra and the typical optimizations using gradient methods require access to all of the data at once for updating the parameters, since its dependent on calculating inverse of matrices or solving systems of linear equations. However, given the scale of data that is common in today's digital world, the need for more efficient and memory friendly algorithms arises. With stochastic gradient descent, a variation of the standard batch gradient optimization, instead of calculating the gradient for the user feature vector using all the item feature vectors that the user has rated as would be done in usually, we approximate the user's gradient using the current item vector for the current rating and vice versa for updates of the item vectors. Thus we are essentially exchanging the luxury of using less memory and computational resources for more time and iterations spent with stochastic gradient descent.\footnote{We note that our formulation is not convex but, due to shuffling of the data and the way the gradients are estimated, the algorithm will converge to at least a local minimum.}
+
+
+\begin{algorithm}[H]
+\caption{Stochastic Gradient Descent (SGD)}
+\begin{algorithmic}
+\Require
+\State Initialize Parameters
+\Repeat
+	\State Read next record of file
+	\State Lookup user and item keys in dictionary
+	\State Update user and item feature vectors
+	\State Update the total sum of errors variable
+	
+\Until {termination criteria is not reached}
+\State Shuffle Data Set
+\Ensure
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Notes}
+\begin{itemize}
+
+	\item Step Size: The algorithms performance is highly dependent on the step size (alpha) parameter of the update equations. Too small of a alpha will result in convergence taking a very long time and lower the chance of finding the global objective. Too large of a alpha will result in convergence not happening as the the algorithm continually 'overshoots' the optimal value. 
+	
+	\item Shuffle: When dealing with large data we need to be clever with how we shuffle our data. Shuffling is no trivial task out of memory. We explored several out of memory methods but ultimately decided with using a pseudo-shuffle, where we read in the file in large chunks that fit in memory, shuffle the lines using built in python functions, write the records back to a text file, and continue until the all of the file has been pseudo-shuffled. Hopefully by choosing a large enough batch size for reading in, our file is shuffle well enough. We also explored with a more robust method of shuffling the shuffled batches, but the added time complexity of appending large files together did not prove worthwhile given almost negligible returns in convergence.
+
+\end{itemize}
 
 \subsection*{Code Example}
 For matrices that fit into memory use the \texttt{MatrixCompletion} module. Otherwise, use \texttt{MatrixCompletionBD} module. 
 
 \subsubsection*{MatrixCompletion}
-Given a \texttt{numpy} matrix $M$ with \texttt{numpy.nan} on the missing entries, the matrix completion problem can be solved (using ASD) as:
+Given a \texttt{numpy} matrix $M$ with \texttt{numpy.nan} on the missing entries, the matrix completion problem can be solved (using ASD, for example) as:
 \begin{verbatim}
 >>> from completethat import MatrixCompletion
 >>> problem = MatrixCompletion(M)
@@ -172,9 +269,9 @@ Given a csv file with the input data, the matrix completion problem can be solve
 \subsection*{Yahoo movies and music reviews database}
 The Yahoo music and movie data sets are publicly available datasets published by Yahoo for use to the public for recreational and research purposes. The music training data set is a small 4 mb pipe-delimited file consisting of roughly 210,000 user-movie ratings. The test set has roughly 10,000 records. There are two ratings schemas available, one on a 5-point scale and the other on a 13-point scale and we arbitrarily chose to use the 5-point scale. The Yahoo music data is a larger 2.2 gb file of 115 million user-song ratings. The ratings are on a 100 point scale.
  
-We look to evaluate the performance of our algorithms on these two datasets, comparing the various algorithms implemented versus a naive benchmark estimate where we used the mean of the training set as our estimator for all records in the test set. Then we compared how well the algorithms performed versus the benchmark. 
+We look to evaluate the performance of our SGD algorithm on these two datasets comparing it versus a naive benchmark estimate, where we used the mean of the training set as our estimator for all records in the test set. Then we compared how well the algorithms performed versus the benchmark. 
 
-The benchmark for the yahoo music data is 4.088. This is the mean value of the ratings in the training set so we will compute the MSE on the test set using the benchmark which yields an RMSE of 1.10. A quick run of Mahout yields 1.17 and CompleteThat's sgd model yielded a 1.19. So our model yielded a pretty similar RMSE as the MAHOUT package. Note that for both of these instances we used a factorization of rank equal to seven and the Complete that sgd algorithm ran slightly faster than Mahout's (.537 minutes vs 1.4 minutes). 
+The benchmark for the yahoo music data is 4.088. This is the mean value of the ratings in the training set so we will compute the MSE on the test set using the benchmark which yields an RMSE of 1.10. A quick run of Mahout yields 1.17 and CompleteThat's sgd model yielded a 1.19. So our model yielded a very similar RMSE as the MAHOUT package. Note that for both of these instances we used a factorization of rank equal to seven and the Complete that sgd algorithm ran slightly faster than Mahout's (.537 minutes vs 1.4 minutes). 
 
 \begin{table}[h]
 \centering
@@ -202,9 +299,9 @@ The benchmark for the yahoo music data is 4.088. This is the mean value of the r
 
 \clearpage
 \subsection*{Columbia University photographs}
-In this section, we demonstrate the applicability of the package to image processing problems. By randomly erasing a predefined proportion of the pixels of an image the problem of completing the image can be cast as a matrix completion problem. For illustration we used three  512 x 512 grayscale photographs taken by one of the authors of the Columbia University campus on December, 2014. The reconstructed images can be seen on Figure~\ref{fig:columbia_pics}, where we erased 65\% of the pixels of each image. 
+In this section, we demonstrate the applicability of the package to image processing problems. Grayscale pictures can be transform into a rectangular matrix where each element of the matrix determines the intensity of the corresponding pixel. For convenience, most of the current digital files use integer numbers between 0 and 255. By randomly erasing, or setting to zero, a predefined proportion of the pixels of an image the problem of completing the image can be cast as a matrix completion problem, where the missing entries are the those with zero on it. 
 
-In addition, to illustrate the ease of use of the package we also present the script used to solve all the problems in what follows:
+For illustration we used three  512 x 512 grayscale photographs taken by one of the authors of the Columbia University campus on December, 2014. The original, erased and reconstructed images are shown on Figure~\ref{fig:columbia_pics}, where we erased 65\% of the pixels of each image.  In addition, to illustrate the ease of use of the package, we also present the (very short) script used to recover the photographs:
 
 \lstinputlisting[numbers=none]{columbia_images.py}
 
@@ -260,7 +357,7 @@ Finally, given the similarities between matrix completion and robust principal c
 
 \newpage
 \section{Source code}
-On the whole, the package directory structure looks like the Figure~\ref{fig:code_scheme}. In the following we present the source code for the package.
+On the whole, the package directory structure looks like Figure~\ref{fig:code_scheme}. In what follows we present the source code of the package.
 \begin{figure}[h!]
   \centering
     \includegraphics[width=0.8\textwidth]{./figures/code_scheme.pdf}
@@ -270,7 +367,9 @@ On the whole, the package directory structure looks like the Figure~\ref{fig:cod
 
 \code{completethat/matrix\_completion.py}{../code/completethat/matrix_completion.py}
 \code{completethat/matrix\_\_init\_\_.py}{../code/completethat/__init__.py}
-\code{completethat/matrix\_\_init\_\_.py}{../code/setup.py}
-
+\code{setup.py}{../code/setup.py}
+\hrulefill
+\subsection*{README.rst}
+\lstinputlisting{../code/README.rst}
 
 \end{document}
