@@ -1,9 +1,6 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{section.1}
 \contentsline {section}{\numberline {2}Matrix Completion Problem}{3}{section.2}
-\contentsline {section}{\numberline {3}Implementation}{3}{section.3}
+\contentsline {section}{\numberline {3}Implementation}{4}{section.3}
 \contentsline {section}{\numberline {4}Case Studies}{5}{section.4}
 \contentsline {section}{\numberline {5}Future Work}{8}{section.5}
 \contentsline {section}{\numberline {6}Source code}{10}{section.6}
-\contentsline {paragraph}{Do not italicize English in math mode.}{23}{section*.18}
-\contentsline {paragraph}{Spacing.}{23}{section*.19}
-\contentsline {paragraph}{Use the right commands.}{23}{section*.20}

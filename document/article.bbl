@@ -11,6 +11,16 @@ Emmanuel~J Cand{\`e}s, Xiaodong Li, Yi~Ma, and John Wright.
 \newblock Robust principal component analysis?
 \newblock {\em Journal of the ACM (JACM)}, 58(3):11, 2011.
 
+\bibitem[CR09]{Candes:2009}
+E.~J. Cand\`es and B.~Recht.
+\newblock Exact matrix completion via convex optimization.
+\newblock {\em Foundations of Computational mathematics}, 9(6):717--772, 2009.
+
+\bibitem[Faz02]{Fazel:2002}
+M.~Fazel.
+\newblock {\em Matrix rank minimization with applications}.
+\newblock PhD thesis, Stanford University, 2002.
+
 \bibitem[GB08]{gb08}
 Michael Grant and Stephen Boyd.
 \newblock Graph implementations for nonsmooth convex programs.

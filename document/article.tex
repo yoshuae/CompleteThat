@@ -74,17 +74,57 @@ The matrix completion problem can be formally stated as follows. We are interest
     \mbox{minimize}   &  \rank(X)\\
     \mbox{subject to} & X_{ij} = M_{ij} \qquad (i,j)\in \Omega
     \end{array}
-    \label{eq:original_problem}
-    \end{equation}
-where $X\in \reals^{n_1 \times n_2}$ is the decision variable and $\rank(X)$ is equal to the rank of the matrix $X$.
+    \label{eq:original_problem1}
+\end{equation}
+where $X\in \reals^{n_1 \times n_2}$ is the decision variable and $\rank(X)$ is equal to the rank of the matrix $X$. The problem (\ref{eq:original_problem1}) seeks the simplest matrix fitting the observed data. Of course, if there were only one low-rank object fitting the data, this would recover $M$.  
+In order to fix the notation correctly define the projector $P_{\Omega}:\reals^{n_1\times n_2} \rightarrow \reals^{n_1\times n_2} $ as
 
+\begin{equation*}
+P_{\Omega}(A) = \left \{ 
+	\begin{array}{lr}
+		A_{ij} & : (i,j) \in \Omega\\
+		0 & : \mathrm{otherwise}
+	\end{array}
+	\right.
+\end{equation*}\\
+Using the projector, Problem (\ref{eq:original_problem1}) can be rewritten as
+\begin{equation}
+    \begin{array}{ll}
+    \mbox{minimize}   &  \rank(X)\\
+    \mbox{subject to} & P_{\Omega}(X) = P_{\Omega}(M)
+    \end{array}
+    \label{eq:original_problem2}
+\end{equation}
+
+Unfortunately, this optimization problem has been shown to be NP-hard and all know algorithms which provide exact solutions require time doubly exponential in the dimension of the matrix both in theory and in practice~\cite{Candes:2009}. Also, the $\rank(X)$ makes the problem non-convex. 
+
+Several approximations to the problem exists. One, the ``tightest convex relaxation of $\rank(X)$''~\cite{Fazel:2002} is the following problem
+
+\begin{equation}
+    \begin{array}{ll}
+    \mbox{minimize}   &  \|X\|_* :=\sum_{i=1}^r \sigma_i(X) \\
+    \mbox{subject to} & P_{\Omega}(X) = P_{\Omega}(M)
+    \end{array}
+    \label{eq:nucl_problem}
+\end{equation}
+
+where $\sigma_i(X)$ denotes the $i$th largest singular value of $X$ and $\|X\|_*$ is the called the nuclear norm. The main point of this relaxation is that the nuclear norm is a convex function and thus can be optimized efficiently via semidefinite programming or by iterative soft thresholding algorithms.
+
+Alternative to nuclear norm minimization there have been many algorithms which are designed to target the following optimization problem
+\begin{equation}
+    \begin{array}{ll}
+    \mbox{minimize}_{X,Y}   & \frac{1}{2} \|P_{\Omega}(XY) - P_{\Omega}(M)\|^2_F \\
+    \end{array}
+    \label{eq:frob_problem}
+\end{equation}
+where $X=YZ$ is the completed matrix and $Y\in \reals^{n_1\times r}, Z\in \reals^{r\times n_2}$ and $r$ represents the (hopefully small) rank of the matrix $X$.
 
 \section{Implementation}
 \texttt{CompleteThat} is a python package that solves the low rank matrix completion problem. Given a low rank matrix with partial entries the package solves an optimization problem to estimate the missing entries. We allow the user to choose between several optimization algorithms including two in memory based algorithms, alternating steepest descent and scaled alternating steepest descent, and one out of memory fitting procedure using stochastic gradient descent. We use extensively the numerical libraries \texttt{spicy} and \texttt{numpy}, and the current implementation includes two classes, \texttt{MatrixCompletion} for in memory based algorithms and \texttt{MatrixCompletionBD} for the memory fitting procedure. The package is available worldwide and can be
 downloaded from \url{https://pypi.python.org/pypi/completethat/0.1dev}.
 
 \subsection*{CVX}
-Problem (\ref{eq:original_problem}) can be easily solved directly using CVX, a package for specifying and solving convex programs~\cite{cvx}, ~\cite{gb08}, with the following code:
+Problem (\ref{eq:nucl_problem}) can be easily solved directly using CVX, a package for specifying and solving convex programs~\cite{cvx}, ~\cite{gb08}, with the following code:
 
 \begin{verbatim}
 index = find(~isnan(M));
@@ -160,10 +200,11 @@ The benchmark for the yahoo music data is 4.088. This is the mean value of the r
 \caption{RMSE vs Step Size vs Rank}
 \end{table}
 
+\clearpage
 \subsection*{Columbia University images}
 
-\newpage
 \begin{figure}[H]
+\resizebox{\textwidth}{!}{%
 \makebox[\textwidth][c]
 {
 \begin{tabular}{ccc}
@@ -190,15 +231,11 @@ The benchmark for the yahoo music data is 4.088. This is the mean value of the r
 \includegraphics[width=65mm]{figures/columbia9.png}
 \\
 \end{tabular}
-
+}
 }
 
 \caption{ASD method applied to three different Columbia University images}
 \end{figure}
-
-\newpage
-
-
 
 \section{Future Work}
 
@@ -228,102 +265,6 @@ On the whole, the package directory structure looks like the Figure~\ref{fig:cod
 \code{completethat/matrix\_completion.py}{../code/completethat/matrix_completion.py}
 \code{completethat/matrix\_\_init\_\_.py}{../code/completethat/__init__.py}
 \code{completethat/matrix\_\_init\_\_.py}{../code/setup.py}
-
-
-
-\newpage
-
-
-\paragraph{Do not italicize English in math mode.}
-Mathematical symbols should be typeset in math mode:
-write $Ax=b$, not Ax=b. This said, subscripts or
-superscripts that derive from English (or any human language) should not be
-italicized. For example, write $f_\mathrm{best}$, not $f_{best}$. The exception
-is subscripts based on a single letter: refer
-to a point that is the center of some set as $x_c$, not $x_{\mathrm{c}}$.
-Similarly, use commands for special functions: use $\sin(x)$,
-$\log(x)$, and $\exp(x)$, not $sin(x)$, $log(x)$, or $exp(x)$.
-
-A really heinous example would be the following:
-\begin{quote}
-Consider the problem
-\[
-\begin{array}{ll}
-minimize & f(Ax - b) \\
-\end{array}
-\]
-where x is the optimization variable and A and b are problem data.
-\end{quote}
-
-\paragraph{Spacing.}
-A blank line ends a paragraph. You shouldn't leave a blank line between an
-equation and the following text unless you intend the equation to end the
-paragraph. Write:
-\begin{quote}
-\begin{verbatim}
-The image of $S$ under $f$,
-\[
-    f(S) = \{ f(x) \mid x \in S \},
-\]
-is convex.
-\end{verbatim}
-\end{quote}
-Inserting extra blank lines before \verb+\[+ or after \verb+\]+ will result in
-bad typesetting. However, the following is fine, since a new paragraph is called for:
-\begin{quote}
-\begin{verbatim}
-The image of $S$ under $f$ is defined as
-\[
-    f(S) = \{ f(x) \mid x \in S \}.
-\]
-
-We now turn to a different topic.
-\end{verbatim}
-\end{quote}
-Using a tab before \verb+f(S)+ inside the equation environment is
-optional, but helps readability in the source.  Similar rules should be
-followed for other environments like \texttt{quote}; see the source of this
-document.
-
-\paragraph{Use the right commands.}
-There are certain special commands in \LaTeX\ for notation that you otherwise
-might attempt to write in an ad-hoc manner. If you do the latter, the typesetting
-will be inferior. A few common examples:
-\begin{itemize}
-\item Norms are written $\|x\|$, not $||x||$. 
-
-\item For set-builder notation, use
-$\{ x \in \reals \mid x \geq 0 \}$, not $\{x \in \reals | x \geq 0 \}$.
-
-\item Make sure to use \verb+\left+ and \verb+\right+ when wrapping
-taller expressions with parentheses, curly braces, brackets, and so on.
-\begin{quote}
-Bad: Let
-\[
-    x = \argmin_u (f(u) + \frac{1}{2}\|u - z\|_2^2).
-\]
-Good: Let
-\[
-    x = \argmin_u \left(f(u) + \frac{1}{2}\|u - z\|_2^2\right).
-\]
-\end{quote}
-
-\item Use \verb+\ldots+ (lower dots) when the dots are surrounded by commas and
-\verb+\cdots+ (center dots) when surrounded by other objects that have full
-height, as in $x_1, x_2, \ldots, x_n$ and $x_1 + x_2 + \cdots + x_n$.
-\end{itemize}
-Similarly, make sure to use our conventions for standard mathematical objects
-for this class; for example, use $\reals$, not $\mathbb{R}$, to denote the set
-of real numbers. Use the \verb+\argmin+ and \verb+\argmax+ commands (as shown
-above); do not write `arg min', since `argmin' is a single mathematical
-operator.  These and other definitions are provided in \verb+defs.tex+.
-
-
-
-\label{s-content}
-
-
-
 
 
 \end{document}
