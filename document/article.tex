@@ -178,7 +178,7 @@ t_{y} = \frac{\|  \nabla f_{Z}(Y) \|^2_F}{\| P_{\Omega}(\nabla f_{Z} (Y)Z\|^2_F}
 	\State $\nabla f_{Y_{i+1}}(Z_i) = -Y^T_{i+1}(P_{\Omega}(M)-P_{\Omega}(Y_{i+1}Z_i)), t_{z_i} = \frac{\|  \nabla f_{Y_{i+1}}(Z_i) \|^2_F}{\| P_{\Omega}(Y_{i+1} \nabla f_Y{i+1} (Z_i)) \|^2_F}$
 	\State $Z_{i+1} = Z_i - t_{z_i}\nabla f_{Y_{i+1}}(Z_i)$
 	\State $i = i +1$
-\Until {termination criteria is not reached}
+\Until {termination criteria is reached}
 \Ensure $X:= Y_i Z_i \in \reals^{n_1\times n_2}$
 \end{algorithmic}
 \end{algorithm}
@@ -204,29 +204,43 @@ which are the gradient descent directions scaled by $(ZZ^T)^{-1}$ and $(X^TX)^{-
 	\State $d_{z_i} = (Y_{i+1}^TY_{i+1}^{-1} \nabla f_{Y_{i+1}}(Z_i), t_{z_i} = \frac{-\nabla f_{Y_{i+1}}(Z_i)\cdot d_{z_i}}{\| P_{\Omega}(Y_{i+1}d_{z_i})\|_F^2}$
 	\State $Z_{i+1} = Z_i + t_{z_i} d_{z_i}$
 	\State $i = i + 1$
-\Until {termination criteria is not reached}
+\Until {termination criteria is reached}
 \Ensure $X:= Y_i Z_i \in \reals^{n_1\times n_2}$
 \end{algorithmic}
 \end{algorithm}
 
 \subsubsection*{Low rank matrix completion by stochastic gradient descent}
-The formal problem as defined in the model section is stated in the language of linear algebra and the typical optimizations using gradient methods require access to all of the data at once for updating the parameters, since its dependent on calculating inverse of matrices or solving systems of linear equations. However, given the scale of data that is common in today's digital world, the need for more efficient and memory friendly algorithms arises. With stochastic gradient descent, a variation of the standard batch gradient optimization, instead of calculating the gradient for the user feature vector using all the item feature vectors that the user has rated as would be done in usually, we approximate the user's gradient using the current item vector for the current rating and vice versa for updates of the item vectors. Thus we are essentially exchanging the luxury of using less memory and computational resources for more time and iterations spent with stochastic gradient descent.\footnote{We note that our formulation is not convex but, due to shuffling of the data and the way the gradients are estimated, the algorithm will converge to at least a local minimum.}
+The formal problem as defined in the model section is stated in the language of linear algebra and the typical optimizations using gradient methods require access to all of the data at once for updating the parameters, since its dependent on calculating inverse of matrices or solving systems of linear equations. However, given the scale of data that is common in today's digital world, the need for more efficient and memory friendly algorithms arises. 
 
+Let $U$ be the set of users and $I$ the set of items. Let $K\subset U \times I$ be the set of known ratings and $r_{ij}$ the rating that user $i$ gave to item $j, \forall (i,j)\in K$. Let $p_i$  be the latent feature vector for user $i$ of length equal to hypothesized rank. Let $q_j$ be the latent feature vector for item $j$ of length equal to hypothesized rank. The stochastic gradient descent method solves the following optimization problem:
+\begin{equation}
+    \begin{array}{ll}
+    \mbox{minimize}_{r_{ij}\in K}   & f:= (r_{ij} - \hat r_{ij})^2 = e_{ij}^2\\
+    \mbox{subject to} & r_{ij} = p_i^T q_j
+    \end{array}
+    \label{eq:SGD}
+\end{equation}
+
+With stochastic gradient descent, a variation of the standard batch gradient optimization, instead of calculating the gradient for the user feature vector using all the item feature vectors that the user has rated as would be done  usually, we approximate the user's gradient using the current item vector for the current rating and vice versa for updates of the item vectors. Thus we are essentially exchanging the luxury of using less memory and computational resources for more time and iterations spent with stochastic gradient descent.\footnote{We note that our formulation is not convex but, due to shuffling of the data and the way the gradients are estimated, the algorithm will converge to at least a local minimum.}
 
 \begin{algorithm}[H]
 \caption{Stochastic Gradient Descent (SGD)}
 \begin{algorithmic}
-\Require
-\State Initialize Parameters
+\Require $r_{ij} \in \reals,  \forall (i,j)\in K$
+\State Initialize Parameters: $\forall i\in U$ randomly initialize $p_i\in \reals^r$. $\forall j\in I$ randomly initialize  $q_j\in \reals^r$
 \Repeat
-	\State Read next record of file
-	\State Lookup user and item keys in dictionary
-	\State Update user and item feature vectors
-	\State Update the total sum of errors variable
-	
-\Until {termination criteria is not reached}
+	\State Read rating $r_{ij}$
+	\State Compute error $e_{ij} = r_{ij} - p_i^Tq_j$
+	\State Compute gradients: 
+	\State $\qquad \qquad \frac{\partial f}{\partial p_i} = -2e_{ij}q_j$
+	\State $\qquad \qquad \frac{\partial f}{\partial q_j} = -2e_{ij}p_i$
+	\State Update parameters:
+	\State $\qquad \qquad p_i:=p_i + 2\alpha e_{ij} q_j$
+	\State $\qquad \qquad q_j:=q_j + 2\alpha e_{ij} p_i$
+	\State Update MSE: $\text{MSE} := \text{MSE} + e_{ij}$
+\Until {termination criteria is reached}
 \State Shuffle Data Set
-\Ensure
+\Ensure $p_i~~\forall i\in U; q_j ~~\forall j\in I$
 \end{algorithmic}
 \end{algorithm}
 
@@ -240,7 +254,7 @@ The formal problem as defined in the model section is stated in the language of 
 \end{itemize}
 
 \subsection*{Code Example}
-For matrices that fit into memory use the \texttt{MatrixCompletion} module. Otherwise, use \texttt{MatrixCompletionBD} module. 
+For matrices that fit into memory use the \texttt{MatrixCompletion} module. Otherwise, use the \texttt{MatrixCompletionBD} module. 
 
 \subsubsection*{MatrixCompletion}
 Given a \texttt{numpy} matrix $M$ with \texttt{numpy.nan} on the missing entries, the matrix completion problem can be solved (using ASD, for example) as:
@@ -301,7 +315,7 @@ The benchmark for the yahoo music data is 4.088. This is the mean value of the r
 \subsection*{Columbia University photographs}
 In this section, we demonstrate the applicability of the package to image processing problems. Grayscale pictures can be transform into a rectangular matrix where each element of the matrix determines the intensity of the corresponding pixel. For convenience, most of the current digital files use integer numbers between 0 and 255. By randomly erasing, or setting to zero, a predefined proportion of the pixels of an image the problem of completing the image can be cast as a matrix completion problem, where the missing entries are the those with zero on it. 
 
-For illustration we used three  512 x 512 grayscale photographs taken by one of the authors of the Columbia University campus on December, 2014. The original, erased and reconstructed images are shown on Figure~\ref{fig:columbia_pics}, where we erased 65\% of the pixels of each image.  In addition, to illustrate the ease of use of the package, we also present the (very short) script used to recover the photographs:
+For illustration we used three  512 x 512 grayscale photographs taken by one of the authors of the Columbia University campus on December, 2014. The original, erased and reconstructed images are shown on Figure~\ref{fig:columbia_pics}, where we erased 35\% of the pixels of each image.  In addition, to illustrate the ease of use of the package, we also present the (very short) script used to recover the photographs:
 
 \lstinputlisting[numbers=none]{columbia_images.py}
 
@@ -344,12 +358,12 @@ For illustration we used three  512 x 512 grayscale photographs taken by one of 
 
 We have plans for various improvements as we continue working with the \texttt{CompleteThat} python package. Overall, we would like to test the software and integrate automated testing cases into the software developing cycle. Also, documentation for the package and its functions, including examples, is high in our priority list. In addition, we hope to incorporate more rigorous error checking and make   available more customization to the user. 
 
-For the memory-based algorithms it is well know that noise in the data introduces overfitting on the estimated matrix. Following the approach taken by Mazumder et al.~\cite{mazumder:2010}  where they solve the same objetive function as the problems above (using the Frobenious norm) but introducing the nuclear norm as regularizer to account for overfitting, we would introduce a regularization option into the matrix completion procedure. 
+For the memory-based algorithms it is well know that noise in the data introduces overfitting on the estimated matrix. Following the approach taken by Mazumder et al.~\cite{mazumder:2010}  where they solve the same objetive function as the problems above (using the Frobenious norm) but introducing the nuclear norm as regularizer to account for overfitting, we would like to introduce a regularization option into the matrix completion procedure. 
 
 For the stochastic gradient descent method, we plan to add a lambda penalty feature for combatting overfitting as well as considering options for more advanced versions of our basic latent factor model as demonstrated by Koren~\cite{koren:2008} in his paper on the prize-winning Netflix models. 
 For all algorithms, we would like to explore and research various hardware and software optimization techniques for faster code. 
 
-Finally, given the similarities between matrix completion and robust principal component analysis one further extension to the functionality of the package could be implementing the robust-PCA procedure outlined by Cand\'es~\cite{candes:2011}, et al.
+Finally, given the similarities between matrix completion and robust principal component analysis one further extension to the functionality of the package could be implementing the robust-PCA procedure outlined by Cand\'es et al.~\cite{candes:2011}.
 
 \newpage
 \bibliographystyle{alpha}

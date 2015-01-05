@@ -8,7 +8,7 @@ def blur(imgpath, delta = 0.65):
     """
     photo = scipy.misc.imread(imgpath, flatten=True).astype(float) #Read as grayscale
     m, n = photo.shape
-    p = round(delta * (m * n - 1)) #Number of blanks
+    p = round(delta * (m * n - 1)) #Number of non-blanks
     A = np.zeros((m * n, 1), dtype=bool)
     A[0:p] = True
     ind = np.random.permutation(range(m*n))
@@ -19,7 +19,7 @@ def blur(imgpath, delta = 0.65):
 
 if __name__ == '__main__':
     
-    # Read image and randomly erase 65% of the pixels
+    # Read image and randomly erase 35% of the pixels
     photo, A = blur('./columbia_1.png')
     M = np.copy(photo)
     M[~A] = np.nan
