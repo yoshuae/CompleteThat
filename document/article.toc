@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
+\contentsline {section}{\numberline {2}Matrix Completion Problem}{3}{section.2}
+\contentsline {section}{\numberline {3}Implementation}{3}{section.3}
+\contentsline {section}{\numberline {4}Case Studies}{5}{section.4}
+\contentsline {section}{\numberline {5}Future Work}{7}{section.5}
+\contentsline {section}{\numberline {6}Source code}{9}{section.6}
+\contentsline {paragraph}{Punctuation in equations.}{22}{section*.18}
+\contentsline {paragraph}{Don't start a sentence with a symbol.}{22}{section*.19}
+\contentsline {paragraph}{Use words to separate symbols in different formulas.}{22}{section*.20}
+\contentsline {paragraph}{References.}{22}{section*.21}
+\contentsline {paragraph}{Do not italicize English in math mode.}{23}{section*.22}
+\contentsline {paragraph}{Spacing.}{23}{section*.23}
+\contentsline {paragraph}{Use of notation and jargon.}{24}{section*.24}
+\contentsline {paragraph}{Use capitalization consistently.}{25}{section*.26}
+\contentsline {paragraph}{Use the right commands.}{25}{section*.27}
+\contentsline {paragraph}{Writing optimization problems.}{26}{section*.28}

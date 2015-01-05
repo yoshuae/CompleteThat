@@ -1,0 +1,63 @@
+\begin{thebibliography}{CLMW11}
+
+\bibitem[Bot12]{bottou:2012}
+L{\'e}on Bottou.
+\newblock Stochastic gradient descent tricks.
+\newblock In {\em Neural Networks: Tricks of the Trade}, pages 421--436.
+  Springer, 2012.
+
+\bibitem[BV04]{BoV:04}
+S.~Boyd and L.~Vandenberghe.
+\newblock {\em Convex Optimization}.
+\newblock Cambridge University Press, 2004.
+
+\bibitem[CLMW11]{candes:2011}
+Emmanuel~J Cand{\`e}s, Xiaodong Li, Yi~Ma, and John Wright.
+\newblock Robust principal component analysis?
+\newblock {\em Journal of the ACM (JACM)}, 58(3):11, 2011.
+
+\bibitem[GB08]{gb08}
+Michael Grant and Stephen Boyd.
+\newblock Graph implementations for nonsmooth convex programs.
+\newblock In V.~Blondel, S.~Boyd, and H.~Kimura, editors, {\em Recent Advances
+  in Learning and Control}, Lecture Notes in Control and Information Sciences,
+  pages 95--110. Springer-Verlag Limited, 2008.
+\newblock \url{http://stanford.edu/~boyd/graph_dcp.html}.
+
+\bibitem[GB14]{cvx}
+Michael Grant and Stephen Boyd.
+\newblock {CVX}: Matlab software for disciplined convex programming, version
+  2.1.
+\newblock \url{http://cvxr.com/cvx}, March 2014.
+
+\bibitem[Kor08]{koren:2008}
+Yehuda Koren.
+\newblock Factorization meets the neighborhood: a multifaceted collaborative
+  filtering model.
+\newblock In {\em Proceedings of the 14th ACM SIGKDD international conference
+  on Knowledge discovery and data mining}, pages 426--434. ACM, 2008.
+
+\bibitem[MHT10]{mazumder:2010}
+Rahul Mazumder, Trevor Hastie, and Robert Tibshirani.
+\newblock Spectral regularization algorithms for learning large incomplete
+  matrices.
+\newblock {\em The Journal of Machine Learning Research}, 11:2287--2322, 2010.
+
+\bibitem[Tre08]{Tref:2008}
+L.~N. Trefethen.
+\newblock Is {G}auss quadrature better than {C}lenshaw-{C}urtis?
+\newblock {\em SIAM Review}, 50:67--87, 2008.
+
+\bibitem[TW14]{Tanner:2014}
+J.~Tanner and K.~Wei.
+\newblock Low rank matrix completion by alternating steepest descent methods.
+\newblock Technical report, SIAM, SIAM J. Imaging Sciences, 2014.
+
+\bibitem[Zha04]{zhang:2004}
+Tong Zhang.
+\newblock Solving large scale linear prediction problems using stochastic
+  gradient descent algorithms.
+\newblock In {\em Proceedings of the twenty-first international conference on
+  Machine learning}, page 116. ACM, 2004.
+
+\end{thebibliography}
