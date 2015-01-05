@@ -6,11 +6,6 @@ L{\'e}on Bottou.
 \newblock In {\em Neural Networks: Tricks of the Trade}, pages 421--436.
   Springer, 2012.
 
-\bibitem[BV04]{BoV:04}
-S.~Boyd and L.~Vandenberghe.
-\newblock {\em Convex Optimization}.
-\newblock Cambridge University Press, 2004.
-
 \bibitem[CLMW11]{candes:2011}
 Emmanuel~J Cand{\`e}s, Xiaodong Li, Yi~Ma, and John Wright.
 \newblock Robust principal component analysis?
@@ -42,11 +37,6 @@ Rahul Mazumder, Trevor Hastie, and Robert Tibshirani.
 \newblock Spectral regularization algorithms for learning large incomplete
   matrices.
 \newblock {\em The Journal of Machine Learning Research}, 11:2287--2322, 2010.
-
-\bibitem[Tre08]{Tref:2008}
-L.~N. Trefethen.
-\newblock Is {G}auss quadrature better than {C}lenshaw-{C}urtis?
-\newblock {\em SIAM Review}, 50:67--87, 2008.
 
 \bibitem[TW14]{Tanner:2014}
 J.~Tanner and K.~Wei.

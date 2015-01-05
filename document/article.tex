@@ -67,20 +67,16 @@ We have developed a Python package (\texttt{CompleteThat}) to perform low rank m
 Matrix factorization has recently seen a large growth in popularity within the mathematics, statistics, and computer science communities as industry continues to apply machine learning techniques on a wide array of problems and scenarios. For our convex optimization project, we decided to take some of the more interesting and applicable topics and algorithms of our class and develop a python package to implement them. We briefly discuss the theory behind matrix factorizing, the models and approaches we choose to use and the algorithms for the optimization. Later, we walk through two case studies illustrating the usefulness and applicability in the context of image process and a recommendation system for Yahoo music and movie data. 
 
 \section{Matrix Completion Problem}
+The matrix completion problem can be formally stated as follows. We are interested in recovering a matrix $M \in \reals^{n_1 \times n_2}$ but only get to observe a number $m \ll n_1n_2$ of its entries. Thus, we want to find a solution to the following optimization problem
 
-\begin{quote}
-Consider the problem
-    \begin{equation}
+\begin{equation}
     \begin{array}{ll}
-    \mbox{minimize}   & (1/2)\|Ax-b\|_2^2 + \lambda \|x\|_1 \\
-    \mbox{subject to} & 0 \preceq x \preceq \ones \\
-    & \|x\|_2 \leq 1,
+    \mbox{minimize}   &  \rank(X)\\
+    \mbox{subject to} & X_{ij} = M_{ij} \qquad (i,j)\in \Omega
     \end{array}
     \label{eq:original_problem}
     \end{equation}
-where $x \in \reals^n$ is the optimization variable, and $A \in \reals^{m
-\times n}$, $b \in \reals^m$, and $\lambda > 0$ are problem data.
-\end{quote}
+where $X\in \reals^{n_1 \times n_2}$ is the decision variable and $\rank(X)$ is equal to the rank of the matrix $X$.
 
 
 \section{Implementation}
@@ -197,7 +193,7 @@ The benchmark for the yahoo music data is 4.088. This is the mean value of the r
 
 }
 
-\caption{ASD method applied three different Columbia University images}
+\caption{ASD method applied to three different Columbia University images}
 \end{figure}
 
 \newpage
@@ -237,77 +233,6 @@ On the whole, the package directory structure looks like the Figure~\ref{fig:cod
 
 \newpage
 
-
-
-\paragraph{Punctuation in equations.}
-An equation is part of a sentence, and you may need to include a comma or a period
-at the end of an equation as a result, whether or not you are using inline or
-display math style. For example:
-\begin{quote}
-    We next discuss how to solve the problem
-    \[
-        \begin{array}{ll}
-            \mbox{minimize} & (1/2)\|Ax - b\|_2^2,
-        \end{array}
-    \]
-    where $x \in \reals^n$ is the optimization variable.
-\end{quote}
-
-\paragraph{Don't start a sentence with a symbol.}
-This hurts readability:
-\begin{quote}
-Bad: $f$ is smooth.\\
-Good: The function $f$ is smooth.
-
-Bad: $x^n - a$ has $n$ distinct zeros. \\
-Good: The polynomial $x^n - a$ has $n$ distinct zeros.
-\end{quote}
-Similarly, don't start a sentence with a reference.
-
-\paragraph{Use words to separate symbols in different formulas.}
-If it might confuse the reader visually or in the actual
-meaning of the sentence, use words to break apart formulas:
-\begin{quote}
-Bad: The sequences $x_1, x_2, \dots$, $y_1, y_2, \dots$ are Cauchy. \\
-OK: The sequences $x_1, x_2, \dots,$ and $y_1, y_2, \dots,$ are Cauchy. \\
-Good: The sequences $(x_i)$ and $(y_i)$ are Cauchy.
-
-OK: The image of $S$ under $f$, $f(S) = \{ x \mid x \in S \}$, is convex. \\
-Good: The image of $S$ under $f$, given by $f(S) = \{ x \mid x \in S \}$, is convex.
-\end{quote}
-Do not insert superfluous words if the meaning is clear.
-\begin{quote}
-Good: Consider the function $f + g + h$, where $f : \reals^n \to
-\reals$, $g : \reals^m \to \reals$, and $h : \reals^p \to \symm^n$ are closed
-proper convex.
-\end{quote}
-
-\paragraph{References.}
-For internal references, use the \texttt{label} and \texttt{ref} commands.
-\emph{Never} number or refer to an entity using a specific number,
-as in ``Table~3.''
-Refer to ``Table~\ref{t-ex1}'', ``\eqref{e-opt-prob}'' (an equation), and so on.
-Only number equations that are important and should be emphasized or that you
-specifically refer to elsewhere. Do not simply number all equations, and do not
-number them randomly. A numbered equation draws the reader's attention, so it
-should be used relatively sparingly. Use \verb+\S+ for section references, as in
-\S\ref{s-content}.
-
-For external references, you must use Bib\TeX. Use references like nouns or 
-footnotes:
-\begin{quote}
-Good: One useful reference is \cite{BoV:04}. \\
-Good: Interested readers may refer to Boyd and Vandenberghe \cite{BoV:04}.
-\end{quote}
-
-Your Bib\TeX\ source must be correct.  Unfortunately, many systems that export
-Bib\TeX\ entries export very poor ones.  Bib\TeX\ ignores the \texttt{*.bib}
-file's capitalization for articles (but not books). To force capitalization,
-you must wrap the letter with curly braces.  The hyphen (-), en dash (--), and
-em dash (---) are distinct punctuation marks that serve different purposes.
-(And the minus sign is different from all three.) When specifying a page range
-in references, use the en dash. For an example of escaping and using the en
-dash, look at our Bib\TeX\ entry for \cite{Tref:2008}.
 
 \paragraph{Do not italicize English in math mode.}
 Mathematical symbols should be typeset in math mode:
@@ -360,87 +285,6 @@ optional, but helps readability in the source.  Similar rules should be
 followed for other environments like \texttt{quote}; see the source of this
 document.
 
-\paragraph{Use of notation and jargon.}
-The correct and appropriate use of notation and jargon takes time to master.
-The following should give you a sense of what to think about:
-
-\begin{itemize}
-\item Don't use the same notation for two different things. Conversely, be consistent
-about notation for the same thing mentioned in two places: don't
-say ``$A_j$ for $1 \leq j \leq n$'' in one place and ``$A_i$ for $i=1,\ldots,n$'' 
-in another, or use two different indices in summations over the same ranges. 
-Formally, the $i$ and $j$ are dummy variables with only that phrase as scope,
-so these are technically correct, but it will confuse the reader.
-
-\item It can be useful to choose names for indices so, for example, $i$
-always varies from 1 to $m$ and $j$ always varies from 1 to $n$ (when
-referencing something like the rows and columns of an $m \times n$ matrix).
-
-\item Define all symbols before or near to where you use them.  A good rule is that
-when you first use something, say, $X$, you should either define it immediately, or 
-within the paragraph.   There are a few cases where it is acceptable to define it 
-later, but you must say this explicitly, as in ``$X$ is the matrix of activation
-levels, which we define below.''
-
-\item A symbol like $f$ refers to a function, while $f(x)$ refers to a
-function evaluated at a given point. Avoid sloppy writing like ``The function
-$f(x)$ is convex.''
-So-called `anonymous' functions defined inline are an exception to this rule,
-as in ``the function $x^2 \cos x$ is a counterexample,'' though this should
-be used only for simple functions.
-
-\item Use typographic naming conventions like capital letters for sets, Greek
-letters for dual variables, \emph{etc}.
-
-\item Try to use mnemonic notation, so $x_c$ for a center point,
-$c$ for a cost vector, $S$ for a generic set, $C$ for a convex set, $B$
-for a ball, and so on. Note that there are conventions about
-the use of different letters in mathematics that you should not ignore:
-$i$, $j$, and $k$ are usually used for indices, $x$ through $z$ for
-variables, $a$ through $d$ for constants, \emph{etc}.
-
-\item Don't use symbols like $\forall$, $\exists$, and $\Rightarrow$; use the
-corresponding words. These symbols are usually appropriate only in
-formal logic. 
-
-\item Don't overuse subscripts. If you do not need to assign a subscript
-to something, don't. For example, if you begin by defining a set as
-$X = \{x_1, \dots, x_n\}$, then it is going to get annoying to refer to subsets
-of $X$, since you will need double subscripts. If possible, it would be better
-to not name the elements of $X$ and only refer to them when necessary, just
-as, say, $x$ and $y$. 
-
-Beware especially of any topic in graph theory when it comes to this rule;
-there are often \emph{many} ways to refer to relevant objects, and finding
-reasonable notation can often get one half the way to getting a handle on the
-problem itself.
-
-\item Don't assign symbols to concepts that you never refer to, or can easily
-refer to without:
-\begin{quote}
-Bad: Let $X$ be a compact subset of a space $Y$. If $f$ is a continuous
-real-valued function over $X$, it has a minimum over $X$. \\
-Good: A continuous real-valued function has a minimum over a compact set.
-\end{quote}
-Similarly, do not say ``The solution $x^\star$ is unique'' if you never need
-to refer to $x^\star$ again; simply say that the solution is unique.
-When you say ``The solution $x^\star$ is unique'' you are both stating a fact
-\emph{and} entering the symbol $x^\star$ into the paper's symbol table and
-the reader's working memory.
-\end{itemize}
-
-\paragraph*{Sections.}
-Use structures like \texttt{section}, \texttt{subsection},
-\texttt{subsubsection}, and \texttt{paragraph} to organize the exposition;
-never insert manual line breaks or page breaks for this purpose. In particular,
-do not use line breaks to separate different topics. Do not use symbols in
-article titles and ideally not even in section headers.
-
-\paragraph{Use capitalization consistently.}
-For section headers, capitalize the first letter, proper nouns, and lowercase
-everything else, as in this document.  For references, write Figure 1, Algorithm 3,
-Theorem 4, and so on.
-
 \paragraph{Use the right commands.}
 There are certain special commands in \LaTeX\ for notation that you otherwise
 might attempt to write in an ad-hoc manner. If you do the latter, the typesetting
@@ -473,31 +317,6 @@ for this class; for example, use $\reals$, not $\mathbb{R}$, to denote the set
 of real numbers. Use the \verb+\argmin+ and \verb+\argmax+ commands (as shown
 above); do not write `arg min', since `argmin' is a single mathematical
 operator.  These and other definitions are provided in \verb+defs.tex+.
-
-\paragraph{Writing optimization problems.}
-In this class, optimization problems can be introduced in the sentence as
-nouns. For example, write as follows:
-\begin{quote}
-Consider the problem
-    \begin{equation}
-    \begin{array}{ll}
-    \mbox{minimize}   & (1/2)\|Ax-b\|_2^2 + \lambda \|x\|_1 \\
-    \mbox{subject to} & 0 \preceq x \preceq \ones \\
-    & \|x\|_2 \leq 1,
-    \end{array}
-    \label{e-opt-prob}
-    \end{equation}
-where $x \in \reals^n$ is the optimization variable, and $A \in \reals^{m
-\times n}$, $b \in \reals^m$, and $\lambda > 0$ are problem data.
-\end{quote}
-It is important to state which symbols refer to variables and which to problem data.
-
-Be sure to carefully distinguish an optimization problem, 
-an algorithm for solving it, and its optimal value.
-You \emph{solve} a problem (possibly, using a particular algorithm);
-an optimization problem \emph{has} an optimal value;
-and an optimization problem \emph{is} convex, or infeasible.
-It does not make sense to talk about whether or not a problem converges.
 
 
 
