@@ -64,7 +64,7 @@ We have developed a Python package (\texttt{CompleteThat}) to perform low rank m
 \newpage
 
 \section{Introduction}
-Matrix factorization has recently seen a large growth in popularity within the mathematics, statistics, and computer science communities as industry continues to apply machine learning techniques on a wide array of problems and scenarios. For our convex optimization project, we decided to take some of the more interesting and applicable topics and algorithms of our class and develop a python package to implement them. We briefly discuss the theory behind matrix factorizing, the models and approaches we choose to use and the algorithms for the optimization. Later, we walk through two case studies illustrating the usefulness and applicability in the context of image process and a recommendation system for Yahoo music and movie data. 
+Matrix factorization has recently seen a large growth in popularity within the mathematics, statistics, and computer science communities as industry continues to apply machine learning techniques on a wide array of problems and scenarios. For our convex optimization project, we decided to take some of the more interesting and applicable topics and algorithms of our class and develop a python package to implement them. We briefly discuss the theory behind matrix factorizing, the models and approaches we choose to use and the algorithms for the optimization. Later, we walk through two case studies illustrating the usefulness and applicability in the context of image processing and a recommendation system for Yahoo music and movie data. 
 
 \section{Matrix Completion Problem}
 The matrix completion problem can be formally stated as follows. We are interested in recovering a matrix $M \in \reals^{n_1 \times n_2}$ but only get to observe a number $m \ll n_1n_2$ of its entries. Thus, we want to find a solution to the following optimization problem
@@ -108,12 +108,12 @@ Several approximations to the problem exists. One, the ``tightest convex relaxat
     \label{eq:nucl_problem}
 \end{equation}
 
-where $\sigma_i(X)$ denotes the $i$th largest singular value of $X$ and $\|X\|_*$ is the called the nuclear norm. The main point of this relaxation is that the nuclear norm is a convex function and thus can be optimized efficiently via semidefinite programming or by iterative soft thresholding algorithms.
+where $\sigma_i(X)$ denotes the $i$th largest singular value of $X$ and $\|X\|_*$ is the called the nuclear norm. The main point of this relaxation is that the nuclear norm is a convex function and thus can be optimized efficiently via semidefinite programming or by iterative soft thresholding algorithms~\cite{cai:2010}~\cite{goldfarb:2011}.
 
 Alternative to nuclear norm minimization there have been many algorithms which are designed to target the following optimization problem
 \begin{equation}
     \begin{array}{ll}
-    \mbox{minimize}_{X,Y}   & \frac{1}{2} \|P_{\Omega}(XY) - P_{\Omega}(M)\|^2_F \\
+    \mbox{minimize}_{Y,Z}   & \frac{1}{2} \|P_{\Omega}(YZ) - P_{\Omega}(M)\|^2_F \\
     \end{array}
     \label{eq:frob_problem}
 \end{equation}
@@ -201,7 +201,12 @@ The benchmark for the yahoo music data is 4.088. This is the mean value of the r
 \end{table}
 
 \clearpage
-\subsection*{Columbia University images}
+\subsection*{Columbia University photographs}
+In this section, we demonstrate the applicability of the package to image processing problems. By randomly erasing a predefined proportion of the pixels of an image the problem of completing the image can be cast as a matrix completion problem. For illustration we used three  512 x 512 grayscale photographs taken by one of the authors of the Columbia University campus on December, 2014. The reconstructed images can be seen on Figure~\ref{fig:columbia_pics}, where we erased 65\% of the pixels of each image. 
+
+In addition, to illustrate the ease of use of the package we also present the script used to solve all the problems in what follows:
+
+\lstinputlisting[numbers=none]{columbia_images.py}
 
 \begin{figure}[H]
 \resizebox{\textwidth}{!}{%
@@ -234,7 +239,8 @@ The benchmark for the yahoo music data is 4.088. This is the mean value of the r
 }
 }
 
-\caption{ASD method applied to three different Columbia University images}
+\caption{ASD method applied three different Columbia University photographs using random sampling}
+\label{fig:columbia_pics}
 \end{figure}
 
 \section{Future Work}

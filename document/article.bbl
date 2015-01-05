@@ -6,6 +6,11 @@ L{\'e}on Bottou.
 \newblock In {\em Neural Networks: Tricks of the Trade}, pages 421--436.
   Springer, 2012.
 
+\bibitem[CCS10]{cai:2010}
+Jian-Feng Cai, Emmanuel~J Cand{\`e}s, and Zuowei Shen.
+\newblock A singular value thresholding algorithm for matrix completion.
+\newblock {\em SIAM Journal on Optimization}, 20(4):1956--1982, 2010.
+
 \bibitem[CLMW11]{candes:2011}
 Emmanuel~J Cand{\`e}s, Xiaodong Li, Yi~Ma, and John Wright.
 \newblock Robust principal component analysis?
@@ -34,6 +39,12 @@ Michael Grant and Stephen Boyd.
 \newblock {CVX}: Matlab software for disciplined convex programming, version
   2.1.
 \newblock \url{http://cvxr.com/cvx}, March 2014.
+
+\bibitem[GM11]{goldfarb:2011}
+Donald Goldfarb and Shiqian Ma.
+\newblock Convergence of fixed-point continuation algorithms for matrix rank
+  minimization.
+\newblock {\em Foundations of Computational Mathematics}, 11(2):183--210, 2011.
 
 \bibitem[Kor08]{koren:2008}
 Yehuda Koren.
