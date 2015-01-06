@@ -2,6 +2,6 @@
 \contentsline {section}{\numberline {2}Matrix Completion Problem}{3}{section.2}
 \contentsline {section}{\numberline {3}Implementation}{4}{section.3}
 \contentsline {paragraph}{Notes}{7}{section*.6}
-\contentsline {section}{\numberline {4}Case Studies}{8}{section.4}
+\contentsline {section}{\numberline {4}Case Studies}{9}{section.4}
 \contentsline {section}{\numberline {5}Future Work}{12}{section.5}
 \contentsline {section}{\numberline {6}Source code}{14}{section.6}
