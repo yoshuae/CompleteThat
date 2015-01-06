@@ -62,7 +62,7 @@
 \maketitle
 
 \begin{abstract}
-We have developed a Python package (\texttt{CompleteThat}) to perform low rank matrix completion. Given a low rank matrix with partial entries we implemented different methods to solve the matrix completion problem:  First, for ``small'' problems we implemented two memory-based algorithms  following the work by Tanner and Wei~\cite{Tanner:2014} to find, given a number $r$, the matrix with rank $r$ that best fits the data using the Frobenius norm. Second, when the problem does not fit into memory, we implemented an out-of-core algorithm (stochastic gradient descent) following the approach in Zhang~\cite{zhang:2004} and Bottou~\cite{bottou:2012}. The package is available at \url{https://pypi.python.org/pypi/completethat/0.1dev}. 
+We have developed a Python package (\texttt{CompleteThat}) to perform low rank matrix completion. Given a low rank matrix with partial entries we implemented different methods to solve the matrix completion problem:  First, for ``small'' problems we implemented two memory-based algorithms  following the work by Tanner and Wei~\cite{Tanner:2014} to find, given a number $r$, the matrix with rank $r$ that best fits the data using the Frobenius norm. Second, when the problem does not fit into memory, we implemented an out-of-core algorithm (stochastic gradient descent) following the approach in Zhang~\cite{zhang:2004} and Bottou~\cite{bottou:2012}. The package is available at \url{https://github.com/yoshuae/CompleteThat} and \url{https://pypi.python.org/pypi/completethat/0.1dev}. 
 \end{abstract}
 
 \newpage
@@ -229,7 +229,7 @@ After the algorithm converges or the maximum number of iterations are met, the a
 \caption{Stochastic Gradient Descent (SGD)}
 \begin{algorithmic}
 \Require $r_{ij} \in \reals,  \forall (i,j)\in K$
-\State Initialize Parameters: $\forall i\in U$ randomly initialize $p_i\in \reals^r$. $\forall j\in I$ randomly initialize  $q_j\in \reals^r$
+\State Initialize Parameters: $\forall i\in U$ randomly initialize $p_i\in \reals^r$. $\forall j\in I$ randomly initialize  $q_j\in \reals^r$, set $\alpha$ parameter
 \Repeat
 	\State Read rating $r_{ij}$
 	\State Compute error $e_{ij} = r_{ij} - p_i^Tq_j$
