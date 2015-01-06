@@ -70,10 +70,10 @@ We have developed a Python package (\texttt{CompleteThat}) to perform low rank m
 \newpage
 
 \section{Introduction}
-Matrix factorization has recently seen a large growth in popularity within the mathematics, statistics, and computer science communities as industry continues to apply machine learning techniques on a wide array of problems and scenarios. For our convex optimization project, we decided to take some of the more interesting and applicable topics and algorithms of our class and develop a python package to implement them. We briefly discuss the theory behind matrix factorizing, the models and approaches we choose to use and the algorithms for the optimization. Later, we walk through two case studies illustrating the usefulness and applicability in the context of image processing and a recommendation system for Yahoo music and movie data. 
+Matrix factorization has recently seen a large growth in popularity within the mathematics, statistics, and computer science communities as industry continues to apply machine learning techniques on a wide array of problems and scenarios. For our convex optimization project, we decided to take some of the more interesting and applicable topics and algorithms of our class and develop a python package to implement them. We briefly discuss the theory behind matrix factorization, the models and approaches we chose to use, and the algorithms for the optimization. Later, we walk through two case studies illustrating the usefulness and applicability in the context of image processing and a recommendation system for Yahoo music and movie data. 
 
 \section{Matrix Completion Problem}
-The matrix completion problem can be formally stated as follows. We are interested in recovering a matrix $M \in \reals^{n_1 \times n_2}$ but only get to observe a number $m \ll n_1n_2$ of its entries. Thus, we want to find a solution to the following optimization problem
+The matrix completion problem can be formally described as follows: we are interested in recovering a matrix $M \in \reals^{n_1 \times n_2}$ but only get to observe a number $m \ll n_1n_2$ of its entries. Thus, we want to find a solution to the following optimization problem:
 
 \begin{equation}
     \begin{array}{ll}
@@ -82,7 +82,7 @@ The matrix completion problem can be formally stated as follows. We are interest
     \end{array}
     \label{eq:original_problem1}
 \end{equation}
-where $X\in \reals^{n_1 \times n_2}$ is the decision variable and $\rank(X)$ is equal to the rank of the matrix $X$. The problem (\ref{eq:original_problem1}) seeks the simplest matrix fitting the observed data. Of course, if there were only one low-rank object fitting the data, this would recover $M$.  
+where $X\in \reals^{n_1 \times n_2}$ is the decision variable and $\rank(X)$ is equal to the rank of the matrix $X$. The defined problem (\ref{eq:original_problem1}) seeks the simplest matrix fitting the observed data. Of course, if there were only one low-rank object fitting the data, this would recover $M$.  
 In order to fix the notation correctly define the projector $P_{\Omega}:\reals^{n_1\times n_2} \rightarrow \reals^{n_1\times n_2} $ as
 
 \begin{equation*}
@@ -102,7 +102,7 @@ Using the projector, Problem (\ref{eq:original_problem1}) can be rewritten as
     \label{eq:original_problem2}
 \end{equation}
 
-Unfortunately, this optimization problem has been shown to be NP-hard and all know algorithms which provide exact solutions require time doubly exponential in the dimension of the matrix both in theory and in practice~\cite{Candes:2009}. Also, the $\rank(X)$ makes the problem non-convex. 
+Unfortunately, this optimization problem has been shown to be NP-hard and all known algorithms which provide exact solutions require exponential time complexity in the dimension of the matrix both in theory and in practice~\cite{Candes:2009}. Also, the $\rank(X)$ makes the problem non-convex. 
 
 Several approximations to the problem exists. One, the ``tightest convex relaxation of $\rank(X)$''~\cite{Fazel:2002} is the following problem
 
@@ -126,7 +126,7 @@ As an alternative to the nuclear norm minimization, there exists several algorit
 where $X=YZ$ is the completed matrix and $Y\in \reals^{n_1\times r}, Z\in \reals^{r\times n_2}$ and $r$ represents the (hopefully small) rank of the matrix $X$. The main point of this relaxation is the use of an alternating minimization scheme or Gauss-Seidel or 2-block coordinate descent method, where first $Y$ is fixed and then the problem is reduced to a convex, standard least squares problem, on $Z$. Later, $Z$ is fixed and then the problem is reduced to a convex, standard least squares problem, on $Y$.
 
 \section{Implementation}
-\texttt{CompleteThat} is a python package that solves the low rank matrix completion problem. Given a low rank matrix with partial entries the package solves an optimization problem to estimate the missing entries. We allow the user to choose between several optimization algorithms including two in memory based algorithms, alternating steepest descent and scaled alternating steepest descent, and one out of memory fitting procedure using stochastic gradient descent. We use extensively the numerical libraries \texttt{spicy} and \texttt{numpy}, and the current implementation includes two classes, \texttt{MatrixCompletion} for in memory based algorithms and \texttt{MatrixCompletionBD} for the out-of-core procedure. The package is available worldwide and can be
+\texttt{CompleteThat} is a python package that solves the low rank matrix completion problem. Given a low rank matrix with partial entries the package solves an optimization problem to estimate the missing entries. We allow the user to choose between several optimization algorithms including two in-memory based algorithms, alternating steepest descent and scaled alternating steepest descent, and one out-of-core fitting procedure using stochastic gradient descent. We utilize extensively the python numerical libraries \texttt{scipy} and \texttt{numpy}, and the current implementation includes two classes, \texttt{MatrixCompletion} for in memory based algorithms and \texttt{MatrixCompletionBD} for the out-of-core procedure. The package is available worldwide and can be
 downloaded from \url{https://pypi.python.org/pypi/completethat/0.1dev}.
 
 \subsection*{CVX}
@@ -142,17 +142,17 @@ cvx_begin
 cvx_end
 \end{verbatim}
 
-Where M is a MATLAB matrix with nan on the missing entries and \texttt{X(index) == M(index)} corresponds to the $P_{\Omega}(X) = P_{\Omega}(M)$ restriction. However, the computation is very slow and for any matrix greater than 100x100 the computational time is too high. Since this is clearly unsatisfactory for practical purposes, specific algorithms were implemented on the package. 
+Where M is a MATLAB matrix with 'nan' on the missing entries and \texttt{X(index) == M(index)} corresponds to the $P_{\Omega}(X) = P_{\Omega}(M)$ restriction. However, the computation is very slow and for any matrix greater than 100x100 the computational time is too high. Since this is clearly unsatisfactory for practical purposes, specific algorithms were implemented in this package to handle matrices on the scale more commonly seen in industry. 
 
 \subsection*{Algorithms}
 \subsubsection*{Low rank matrix completion by alternating steepest descent methods}
-The  alternating steepest descent methods implemented on \texttt{CompleteThat} solve the Problem (\ref{eq:frob_problem}) above.  Let the objective function of the optimization problem $f: \reals^{n_1\times r}\times \reals^{r\times n_2} \rightarrow \reals$ be defined as
+The  alternating steepest descent methods implemented in \texttt{CompleteThat} solves the Problem (\ref{eq:frob_problem}) above.  Let the objective function of the optimization problem $f: \reals^{n_1\times r}\times \reals^{r\times n_2} \rightarrow \reals$ be defined as
 \begin{equation}
 	f(Y,Z):=\frac{1}{2} \|P_{\Omega}(YZ) - P_{\Omega}(M)\|^2_F.
 	\label{eq:ASD_prob}
 \end{equation}
 
-To solve efficiently the above problem, Tanner and Wei~\cite{Tanner:2014} use a single step of simple line-search along the gradient descent directions.  Let us write $f(Y, Z)$ as $f_Z(Y)$ when $Z$ is held constant and $f_Y(Z)$ when $Y$ is held constant and let $t_y, t_z$ be the steepest descent step sizes for descent directions.
+To efficiently solve the above problem, Tanner and Wei~\cite{Tanner:2014} use a single-step, simple line-search along the gradient descent directions.  Let us write $f(Y, Z)$ as $f_Z(Y)$ when $Z$ is held constant and $f_Y(Z)$ when $Y$ is held constant and let $t_y, t_z$ be the steepest descent step sizes for descent directions.
 
 The Alternating Steepest Descent Method (ASD) applies steepest gradient descent to $f(Y, Z)$ in (\ref{eq:ASD_prob}) alternatively with respect to $Y$ and $Z$. It can be shown that the directions of gradient ascent and the steepest descent step sizes are~\cite{Tanner:2014} :
 \[
@@ -183,7 +183,7 @@ t_{y} = \frac{\|  \nabla f_{Z}(Y) \|^2_F}{\| P_{\Omega}(\nabla f_{Z} (Y)Z\|^2_F}
 \end{algorithmic}
 \end{algorithm}
 
-The Scaled Alternating Steepest Descent Method (sASD) is an accelerated version of ASD and uses a scaled gradient descent direction with exact line-search. Its main motivation for the scaled factors is the explicit expression for the Newton directions for the problem (\ref{eq:ASD_prob}) if all the entries in the matrix $M$ were know:
+The Scaled Alternating Steepest Descent Method (sASD) is an accelerated version of ASD and uses a scaled gradient descent direction with exact line-search. Its main motivation for the scaled factors is the explicit expression for the Newton directions for the problem (\ref{eq:ASD_prob}) if all the entries in the matrix $M$ were known:
 \[
 (M - YZ)Z^T(ZZ^T)^{-1}
 \]
@@ -216,14 +216,14 @@ Let $U$ be the set of users and $I$ the set of items. Let $K\subset U \times I$ 
 \begin{equation}
     \begin{array}{ll}
     \mbox{minimize}_{r_{ij}\in K}   & f:= (r_{ij} - \hat r_{ij})^2 = e_{ij}^2\\
-    \mbox{subject to} & r_{ij} = p_i^T q_j
+    \mbox{subject to} & \hat r_{ij} = p_i^T q_j
     \end{array}
     \label{eq:SGD}
 \end{equation}
 
 With Stochastic gradient descent, a variation of the standard batch gradient optimization, instead of calculating the gradient using all of the ratings data, we approximate the gradient of our objective function using just the current record and update just the latent feature vectors of the user and item pertaining to the current rating. Thus one of the highlights of our package is that we simply read the file in line by line, running the algorithm in place. After each update, we simply read in the next line of the file and repeat.\footnote{We note that our formulation is not convex but, due to shuffling of the data and the way the gradients are estimated, the algorithm will converge to at least a local minimum.}
 
-After the algorithm converges or the maximum number of iterations are met, the algorithm has a set of user and item latent vectors which can be used to compute the estimated rating $r_{ij}$ by simply taking the dot product of the two vectors. Similarly, the entire ratings matrix could easily be built with the vectors although we have neglected to do so for practicality reasons. 
+After the algorithm converges or the maximum number of iterations are met, the algorithm has a set of user and item latent vectors which can be used to compute the estimated rating $r_{ij}$ by simply taking the dot product of the two vectors. Similarly, the entire ratings matrix could easily be built with the vectors although we have neglected to do so in our package for practicality reasons. 
 
 \begin{algorithm}[H]
 \caption{Stochastic Gradient Descent (SGD)}
@@ -249,9 +249,9 @@ After the algorithm converges or the maximum number of iterations are met, the a
 \paragraph{Notes}
 \begin{itemize}
             
-	\item Step Size: The algorithms performance is highly dependent on the step size ($\alpha$) parameter of the update equations. Too small of a alpha will result in convergence taking a very long time and lower the chance of finding the global objective. Too large of a alpha will result in convergence not happening as the the algorithm continually 'overshoots' the optimal value. Thus an essential part of using this algorithm will be experimentation with the step size. Currently, the step size (alpha parameter) is fully adjustable, with the default being a .01 decreasing 30\% each pass over the data until it reaches 1e-6 whereby it will remain constant until the stopping criterion of the algorithm are reached.
+	\item Step Size: The algorithms performance is highly dependent on the step size ($\alpha$) parameter of the update equations. Too small of a alpha will result in convergence taking a very long time and lower the chance of finding the global objective. Too large of a alpha will result in convergence not happening as the the algorithm continually 'overshoots' the optimal value. Thus an essential part of using this algorithm will be experimentation with the step size. Currently, the step size (alpha parameter) is fully adjustable, with the default being a .01 decreasing 30\% each pass over the data until it reaches 1e-6 whereby it will remain constant until the stopping criterion of the algorithm is reached.
 	
-	\item Shuffle: When dealing with large data files we needed to be clever with how we shuffle our data. Stochastic gradient descent performs much better with shuffling of the data after each pass over the file thus shuffling is essential; yet shuffling is no trivial task for files too big to fit entirely into the computers random access memory. We explored various shuffling methods for both in-memory and out-of-memory but ultimately decided with using a batch pseudo-shuffle. Our batch shuffle method shuffles the file in chunks. So we read in some large portion (the batch size) of the file that will fit in memory, we shuffle the ratings of that batch using built in python functions, and lastly we write the shuffled ratings back to a text file, and continue sequentially until the all of the file has been shuffled. Following this method we say 'pseudo-shuffled' since the file is not truly shuffled. It is shuffled within the batch/portion of the file it belongs to but still not truly shuffled within the entire file. The larger the batches, the better the shuffled ratings, until of course we read the entire file into memory and shuffle it, the ideal situation. Hopefully by choosing a large enough batch size for reading in, our file will be shuffled well enough. We also explored a more robust method of shuffling the data by additionally shuffling the shuffled batches whereas before we wrote the shuffled ratings back to a file sequentially.  However ultimately the noticeably bigger time complexity of moving and appending large files together via Linux did not prove worthwhile given almost negligible returns in convergence
+	\item Shuffle: When dealing with large data files we needed to be clever with how we shuffle our data. Stochastic gradient descent performs much better with shuffling of the data after each pass over the file thus shuffling is essential; yet shuffling is no trivial task for files too big to fit entirely into the computers random access memory. We explored various shuffling methods for both in-memory and out-of-memory but ultimately decided with using a batch pseudo-shuffle. Our batch shuffle method shuffles the file in chunks. So we read in some large portion (the batch size) of the file that will fit in memory, we shuffle the ratings of that batch using built in python functions, we write the shuffled ratings back to a text file, and continue sequentially until the all of the file has been shuffled. Following this method we say 'pseudo-shuffled' since the file is not truly shuffled. It is shuffled within the batch/portion of the file it belongs to but still not truly shuffled within the entire file. The larger the batches, the better the shuffled ratings, until of course we read the entire file into memory and shuffle it, the ideal situation. Hopefully by choosing a large enough batch size for reading into the memory, our file will be shuffled well enough. We also explored a more robust method of shuffling the data by additionally shuffling the shuffled batches whereas before we wrote the shuffled ratings back to a file sequentially.  However ultimately the noticeably bigger time complexity of moving and appending large files together via Linux did not prove worthwhile given almost negligible returns in convergence.
 
 \end{itemize}
 
@@ -287,11 +287,11 @@ The Yahoo music and movie data sets are publicly available datasets published by
  
 We look to evaluate the performance of our algorithms on these two datasets, comparing the various algorithms implemented versus a naive benchmark estimate where we used the mean of the training set as our estimator for all records in the test set. Then we compared how well the algorithms performed versus the benchmark as well as Mahout.  
 
-Apache Mahout is a mainstream scalable and fast machine learning library implemented in java which has a recommendation engine component similar to MatrixCompletionBD but uses alternating least squares for the optimization.  Thus given the origins and popularity of Mahout, we are also interested in comparing it to our python packages performance.
+Apache Mahout is a mainstream scalable and fast machine learning library implemented in java which has a recommendation engine component similar to MatrixCompletionBD but uses alternating least squares for the optimization.  Thus given the origins and popularity of Mahout, we are also interested in comparing it to our python package's performance.
 
-The naive estimator for the yahoo music data is 4.088. This is the mean value of the ratings in the training set so we will compute the MSE on the test set using the benchmark, which yields an RMSE of 1.10 (Note we use RMSE here only because Mahout uses RMSE). A quick run of Mahout yields 1.17 and CompleteThat's SGD model yielded a 1.19 (we used rank 7 but larger ranks will outperform the naive baseline as we show in our table). So our model yielded a pretty similar RMSE as the MAHOUT package. Note that for both of these instances we used a factorization of rank equal to seven and the CompleteThat stochastic gradient descent algorithm ran slightly faster than Mahout's, with our SGD algorithm running on 220,000 ratings and converging in less than a minute (.537 minutes versus 1.4 minutes)!
+The naive estimator for the Yahoo music data is 4.088. This is the mean value of the ratings in the training set so we will compute the MSE on the test set using the benchmark, which yields an RMSE of 1.10 (Note we switch to RMSE here only because Mahout uses RMSE). A quick run of Mahout yields 1.17 and CompleteThat's SGD model yielded a 1.19 (we used rank 7 but larger ranks will outperform the naive baseline as we show in our table). So our model yielded a pretty similar RMSE as the MAHOUT package although both were worse than the benchmark. Later with some fine-tuning we beat the benchmark. *Note that for both of these instances we used a factorization of rank equal to seven and the CompleteThat stochastic gradient descent algorithm ran slightly faster than Mahout's, with our SGD algorithm running on 220,000 ratings and converging in less than a minute (.537 minutes versus 1.4 minutes)!
 
-The Yahoo Music data is a lot larger and provided a much more interesting scenario but unfortunately due to the time constraints and how long it took to converge on the Yahoo Music data, we did not did as much testing. It does take a very long time for the stochastic gradient descent algorithm to converge, but does run. In experimentation with features of rank six, we saw it converging in approximately 9 hours, with results roughly on par relative to the naïve baseline using the training set. Unfortunately, we were not able to get Apache Mahout working on our local machines with that scale of data, thus have no real comparison to be made in terms of how well our package does scale, but if nothing else we can say that our algorithm is fairly invariant to the size of the data.
+The Yahoo Music data is a lot larger and provided a much more interesting scenario but unfortunately due to the time constraints and how long it took to converge on the Yahoo Music data, we did not do as much testing. It does take a very long time for the stochastic gradient descent algorithm to converge, but does run. In experimentation with latent feature vectors of length six, we saw it converging in approximately 9 hours, with results roughly on par relative to the naïve baseline using the training set. Unfortunately, we were not able to get Apache Mahout working on our local machines with that scale of data, thus have no real comparison to be made in terms of how well our package does scale, but if nothing else we can say that our algorithm is fairly invariant to the size of the data.
 
 Our RAM requirements for the algorithm decrease significantly with this sort of out-of-memory implementation. For example, with the Yahoo Music Data we only needed to store the parameters for each user and item, rather than the entire 115 million records of our file plus the parameters. This results in storing ~2 million parameters in a python dictionary (a built-in hash table) rather than 115 million records in memory.  Thus we are essentially exchanging the luxury of using less memory and computational resources for more time and iterations spent with stochastic gradient descent.
 
@@ -323,9 +323,9 @@ Table~\ref{tab:yahoo_data} shows the performance of the SGD on the Yahoo music w
 
 \clearpage
 \subsection*{Columbia University photographs}
-In this section, we demonstrate the applicability of the package to image processing problems. Grayscale pictures can be transform into a rectangular matrix where each element of the matrix determines the intensity of the corresponding pixel. For convenience, most of the current digital files use integer numbers between 0 and 255. By randomly erasing, or setting to zero, a predefined proportion of the pixels of an image the problem of completing the image can be cast as a matrix completion problem, where the missing entries are the those with zero on it. 
+In this section, we demonstrate the applicability of the package to image processing problems. Grayscale pictures can be transformed into a rectangular matrix where each element of the matrix determines the intensity of the corresponding pixel. For convenience, most of the current digital files use integer numbers between 0 and 255. By randomly erasing, or setting to zero, a predefined proportion of the pixels of an image the problem of completing the image can be cast as a matrix completion problem, where the missing entries are the those with zero on it. 
 
-For illustration we used three  512 x 512 grayscale photographs taken by one of the authors of the Columbia University campus on December, 2014. The original, erased and reconstructed images are shown on Figure~\ref{fig:columbia_pics}, where we erased 35\% of the pixels of each image.  In addition, to illustrate the ease of use of the package, we also present the (very short) script used to recover the photographs:
+For illustration we used three  512 x 512 grayscale photographs taken by one of the authors of the Columbia University campus on December, 2014. The original, erased, and reconstructed images are shown on Figure~\ref{fig:columbia_pics}, where we erased 35\% of the pixels of each image.  In addition, to illustrate the ease of use of the package, we also present the (very short) script used to recover the photographs:
 
 \lstinputlisting[numbers=none]{columbia_images.py}
 
@@ -366,9 +366,9 @@ For illustration we used three  512 x 512 grayscale photographs taken by one of 
 
 \section{Future Work}
 
-We have plans for various improvements as we continue working with the \texttt{CompleteThat} python package. Overall, we would like to test the software and integrate automated testing cases into the software developing cycle. Also, documentation for the package and its functions, including examples, is high on our priority list. In addition, we hope to incorporate more rigorous error checking and make   available more customization to the user. 
+We have plans for various improvements as we continue working with the \texttt{CompleteThat} python package. Overall, we would like to test the software and integrate automated testing cases into the software development cycle. Also, documentation for the package and its functions, including examples, is high on our priority list. In addition, we hope to incorporate more rigorous error checking and make more customization available to the user. 
 
-For the memory-based algorithms it is well know that noise in the data introduces overfitting on the estimated matrix. Following the approach taken by Mazumder et al.~\cite{mazumder:2010}  where they solve the same objetive function as the problems above (using the Frobenious norm) but introducing the nuclear norm as regularizer to account for overfitting, we would like to introduce a regularization option into the matrix completion procedure. 
+For the memory-based algorithms it is well known that noise in the data introduces overfitting on the estimated matrix. Following the approach taken by Mazumder et al.~\cite{mazumder:2010}  where they solve the same objective function as the problems above (using the Frobenious norm) but introducing the nuclear norm as regularizer to account for overfitting, we would like to introduce a regularization option into the matrix completion procedure. 
 
 For the stochastic gradient descent method, we plan to add a lambda penalty feature for combatting overfitting as well as considering options for more advanced versions of our basic latent factor model as demonstrated by Koren~\cite{koren:2008} in his paper on the prize-winning Netflix models. 
 For all algorithms, we would like to explore and research various hardware and software optimization techniques for faster code. 
