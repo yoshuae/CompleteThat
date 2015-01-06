@@ -52,7 +52,7 @@
 
 \input defs.tex
 
-\title{\texttt{CompleteThat}: A python package for  low-rank matrix completion\\EEOR E4650 Course Project
+\title{\texttt{CompleteThat}\\ A python package for  low-rank matrix completion\\EEOR E4650 Course Project
 }
 \author{Joshua Edgerton \and Esteban Fajardo}
 \date{January 5, 2014}
@@ -62,7 +62,7 @@
 \maketitle
 
 \begin{abstract}
-We have developed a Python package (\texttt{CompleteThat}) to perform low rank matrix completion. Given a low rank matrix with partial entries we implemented different methods to solve the matrix completion problem:  First, for ``small'' problems we implemented two memory-based algorithms  following the work by Tanner and Wei~\cite{Tanner:2014} to find, given a number $r$, the matrix with rank $r$ that best fits the data using the Frobenius norm. Second, when the problem does not fit into memory, we implemented a memory-fitting algorithm (stochastic gradient descent) following the approach in Zhang~\cite{zhang:2004} and Bottou~\cite{bottou:2012}. The package is available at \url{https://pypi.python.org/pypi/completethat/0.1dev}. 
+We have developed a Python package (\texttt{CompleteThat}) to perform low rank matrix completion. Given a low rank matrix with partial entries we implemented different methods to solve the matrix completion problem:  First, for ``small'' problems we implemented two memory-based algorithms  following the work by Tanner and Wei~\cite{Tanner:2014} to find, given a number $r$, the matrix with rank $r$ that best fits the data using the Frobenius norm. Second, when the problem does not fit into memory, we implemented an out-of-core algorithm (stochastic gradient descent) following the approach in Zhang~\cite{zhang:2004} and Bottou~\cite{bottou:2012}. The package is available at \url{https://pypi.python.org/pypi/completethat/0.1dev}. 
 \end{abstract}
 
 \newpage
@@ -210,7 +210,7 @@ which are the gradient descent directions scaled by $(ZZ^T)^{-1}$ and $(X^TX)^{-
 \end{algorithm}
 
 \subsubsection*{Low rank matrix completion by stochastic gradient descent}
-The formal problem as defined in the model section is stated in the language of linear algebra and the typical optimizations using gradient methods require access to all of the data at once for updating the parameters, since its dependent on calculating inverse of matrices or solving systems of linear equations. However, given the scale of data that is common in today's digital world, the need for more efficient and memory friendly algorithms arises. 
+The formal problem as defined in the model section is stated in the standard language of linear algebra and the typical optimizations using gradient methods require the calculation of the gradient based on the sum of all the error terms, meaning that when updating our latent feature vectors, we calculate the gradient based on all the data in our ratings file. Given the scale of data that is common in today's digital world, the need for more efficient and memory friendly algorithms arises as calculating the gradient on a large enough file will be computationally expensive and time consuming. 
 
 Let $U$ be the set of users and $I$ the set of items. Let $K\subset U \times I$ be the set of known ratings and $r_{ij}$ the rating that user $i$ gave to item $j, \forall (i,j)\in K$. Let $p_i$  be the latent feature vector for user $i$ of length equal to hypothesized rank. Let $q_j$ be the latent feature vector for item $j$ of length equal to hypothesized rank. The stochastic gradient descent method solves the following optimization problem:
 \begin{equation}
@@ -221,7 +221,11 @@ Let $U$ be the set of users and $I$ the set of items. Let $K\subset U \times I$ 
     \label{eq:SGD}
 \end{equation}
 
-With stochastic gradient descent, a variation of the standard batch gradient optimization, instead of calculating the gradient for the user feature vector using all the item feature vectors that the user has rated as would be done  usually, we approximate the user's gradient using the current item vector for the current rating and vice versa for updates of the item vectors. Thus we are essentially exchanging the luxury of using less memory and computational resources for more time and iterations spent with stochastic gradient descent.\footnote{We note that our formulation is not convex but, due to shuffling of the data and the way the gradients are estimated, the algorithm will converge to at least a local minimum.}
+With Stochastic gradient descent, a variation of the standard batch gradient optimization, instead of calculating the gradient using all of the ratings data, we approximate the gradient of our objective function using just the current record and update just the latent feature vectors of the user and item pertaining to the current rating. Thus one of the highlights of our package is that we simply read the file in line by line, running the algorithm in place. After each update, we simply read in the next line of the file and repeat.\footnote{We note that our formulation is not convex but, due to shuffling of the data and the way the gradients are estimated, the algorithm will converge to at least a local minimum.}
+
+Our RAM requirements for the algorithm decrease significantly with this sort of out-of-memory implementation. For example, with the Yahoo Music Data we only needed to store the parameters for each user and item, rather than the entire 115 million records of our file plus the parameters. This results in storing ~2 million parameters in a python dictionary (a sort of built in hash function and table) rather than 115 million records in memory.  Thus we are essentially exchanging the luxury of using less memory and computational resources for more time and iterations spent with stochastic gradient descent.
+
+After the algorithm converges or the maximum number of iterations are me have a set of user and item latent vectors which can be used to compute the estimated rating $r_{ij}$ by simply taking the dot product of the two vectors. Similarly the entire ratings matrix could easily be built with the vectors although we have neglected to do so for practicality reasons. 
 
 \begin{algorithm}[H]
 \caption{Stochastic Gradient Descent (SGD)}
@@ -267,7 +271,7 @@ Given a \texttt{numpy} matrix $M$ with \texttt{numpy.nan} on the missing entries
 \end{verbatim}
 
 \subsubsection*{MatrixCompletionBD}
-Given a csv file with the input data, the matrix completion problem can be solved as:
+Given a csv file with the input data with three fields (user id, item id , rating) the matrix completion problem can be solved as:
 
 \begin{verbatim}
 >>> from completethat import MatrixCompletionBD
@@ -281,12 +285,14 @@ Given a csv file with the input data, the matrix completion problem can be solve
 
 \section{Case Studies}
 \subsection*{Yahoo movies and music reviews database}
-The Yahoo music and movie data sets are publicly available datasets published by Yahoo for use to the public for recreational and research purposes. The music training data set is a small 4 mb pipe-delimited file consisting of roughly 210,000 user-movie ratings. The test set has roughly 10,000 records. There are two ratings schemas available, one on a 5-point scale and the other on a 13-point scale and we arbitrarily chose to use the 5-point scale. The Yahoo music data is a larger 2.2 gb file of 115 million user-song ratings. The ratings are on a 100 point scale.
+The Yahoo music and movie data sets are publicly available datasets published by Yahoo for use to the public for recreational and research purposes. The music training data set is a small 4 mb tab-delimited file consisting of roughly 210,000 user-movie ratings. The test set has roughly 10,000 records. There are actually two ratings schemas available, one on a 5-point scale and the other on a 13-point scale and we arbitrarily chose to use the 5-point scale. The Yahoo music data is a larger 2.2 gb file of 115 million user-song ratings. The ratings are on a 100 point scale.
  
-We look to evaluate the performance of our SGD algorithm on these two datasets comparing it versus a naive benchmark estimate, where we used the mean of the training set as our estimator for all records in the test set. Then we compared how well the algorithms performed versus the benchmark. 
+We look to evaluate the performance of our algorithms on these two datasets, comparing the various algorithms implemented versus a naive benchmark estimate where we used the mean of the training set as our estimator for all records in the test set. Then we compared how well the algorithms performed versus the benchmark as well as Mahout.  Apache Mahout is a mainstream scalable and fast machine learning library implemented in java which has a recommendation engine component similar to MatrixCompletionBD but uses alternating least squares for the optimization.  Thus given the origins and popularity of Mahout, we are also interested in comparing it to our python package?s performance.
+The naïve estimator for the yahoo music data is 4.088. This is the mean value of the ratings in the training set so we will compute the MSE on the test set using the benchmark, which yields an RMSE of 1.10 (Note we use RMSE here only because Mahout uses RMSE). A quick run of Mahout yields 1.17 and CompleteThat's SGD model yielded a 1.19 (we used rank 7 but larger ranks will outperform the naïve baseline as we show in our table). So our model yielded a pretty similar RMSE as the MAHOUT package. Note that for both of these instances we used a factorization of rank equal to seven and the CompleteThat stochastic gradient descent algorithm ran slightly faster than Mahout's, with our SGD algorithm running on 220,000 ratings and converging in less than a minute (.537 minutes versus 1.4 minutes)!
 
-The benchmark for the yahoo music data is 4.088. This is the mean value of the ratings in the training set so we will compute the MSE on the test set using the benchmark which yields an RMSE of 1.10. A quick run of Mahout yields 1.17 and CompleteThat's sgd model yielded a 1.19. So our model yielded a very similar RMSE as the MAHOUT package. Note that for both of these instances we used a factorization of rank equal to seven and the Complete that sgd algorithm ran slightly faster than Mahout's (.537 minutes vs 1.4 minutes). 
+The Yahoo Music data is a lot larger and provided a much more interesting scenario but unfortunately due to the time constraints and how long it took to converge on the Yahoo Music data, we didn?t get as much testing done here. It does take a very long time for the stochastic gradient descent algorithm to converge, but does run. In experimentation with features of rank six, we saw it converging in approximately 9 hours, with results roughly on par relative to the naïve baseline using the training set. Unfortunately, we weren?t able to get Apache Mahout working on our local machines with that scale of data, thus have no real comparison to be made in terms of how well our package does scale, but if nothing else we can say that our algorithm is fairly invariant to the size of the data.
 
+Table~\ref{tab:yahoo_data} shows the performance of the SGD on the Yahoo music with varying the rank of the user and item latent features. We see that the algorithm performs best on the test set using a rank around 15, and it is evident that too large a rank is detrimental to performance.  
 \begin{table}[h]
 \centering
 \resizebox{0.75\textwidth}{!}{%
@@ -309,6 +315,7 @@ The benchmark for the yahoo music data is 4.088. This is the mean value of the r
 \end{tabular}
 }
 \caption{RMSE vs Step Size vs Rank}
+\label{tab:yahoo_data}
 \end{table}
 
 \clearpage
@@ -356,7 +363,7 @@ For illustration we used three  512 x 512 grayscale photographs taken by one of 
 
 \section{Future Work}
 
-We have plans for various improvements as we continue working with the \texttt{CompleteThat} python package. Overall, we would like to test the software and integrate automated testing cases into the software developing cycle. Also, documentation for the package and its functions, including examples, is high in our priority list. In addition, we hope to incorporate more rigorous error checking and make   available more customization to the user. 
+We have plans for various improvements as we continue working with the \texttt{CompleteThat} python package. Overall, we would like to test the software and integrate automated testing cases into the software developing cycle. Also, documentation for the package and its functions, including examples, is high on our priority list. In addition, we hope to incorporate more rigorous error checking and make   available more customization to the user. 
 
 For the memory-based algorithms it is well know that noise in the data introduces overfitting on the estimated matrix. Following the approach taken by Mazumder et al.~\cite{mazumder:2010}  where they solve the same objetive function as the problems above (using the Frobenious norm) but introducing the nuclear norm as regularizer to account for overfitting, we would like to introduce a regularization option into the matrix completion procedure. 
 
