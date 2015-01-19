@@ -354,7 +354,7 @@ class MatrixCompletionBD:
 		print('test file written as ' + test_file)
 		temp_file.close()
 
-	def train_sgd(self,dimension=6,init_step_size=.01,min_step=1e-5,reltol=.05,rand_init_scalar=1, maxiter=100,batch_size_sgd=50000,shuffle=True,print_output=False):
+	def train_sgd(self,dimension=6,init_step_size=.01,min_step=1e-5,reltol=.05,lam=0,rand_init_scalar=1, maxiter=100,batch_size_sgd=50000,shuffle=True,print_output=False):
 		
 		init_time=time.time()
 		alpha=init_step_size
@@ -381,9 +381,9 @@ class MatrixCompletionBD:
 				try:
 					# do some updating
 					# updates
-					error=record[2]-np.dot(self._users[record[0]],self._items[record[1]])
-					self._users[record[0]]=self._users[record[0]]+alpha*2*error*self._items[record[1]]
-					self._items[record[1]]=self._items[record[1]]+alpha*2*error*self._users[record[0]]
+					error=record[2]-np.dot(self._users[record[0]],self._items[record[1]])+lam*(linalg.norm(self._users[record[0]])**2+linalg.norm(self._items[record[1]])**2)
+					self._users[record[0]]=self._users[record[0]]+alpha*(2*error*self._items[record[1]]-lam*self._users[record[0]])
+					self._items[record[1]]=self._items[record[1]]+alpha*(2*error*self._users[record[0]]-lam*self._items[record[1]])
 					total_err.append(error**2)
 				except:
 					#else:
