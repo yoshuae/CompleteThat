@@ -293,7 +293,7 @@ class MatrixCompletionBD:
 		     Initialize Matrix Completion BD object
 		 """
 		 self._file = file_path
-		 self._delimitter = '\t'
+		 self._delimitter = delimitter
 		 self._users = dict()
 		 self._items = dict()
 
@@ -488,6 +488,34 @@ class MatrixCompletionBD:
 		if counter>0: print('Items/Users Key Errors: %f ' % counter )
 		# returns Mean Squared Error
 		return sum(mse)/len(mse)
+		
+	def baseline_error(self,test_file_path):
+		"""
+		
+		Compute a mean error from the training set for a baseline error on test set 
+		
+		"""
+		print('Compute Baseline Metric Using Mean of Training set ... ')
+		# grab mean of training set
+		error=[]
+		train_data=open(self._file)
+		for line in train_data:
+			record=line[0:len(line)-1].split(self._delimitter)
+			error.append(float(record[2]))
+
+		self._base_measure=sum(error)/len(error)
+		train_data.close()
+
+		print('...Working...')
+		#compute MSE on test set using mean from training set 
+		mse=[]
+		test_data=open(test_file_path)
+		for line in test_data:
+			record=line[0:len(line)-1].split(self._delimitter)
+			mse.append((float(record[2])-self._base_measure)**2)
+
+		self._base_test_error=sum(mse)/len(mse)
+		return (self._base_test_error)		
 
 	def build_matrix(self):
 		pass
