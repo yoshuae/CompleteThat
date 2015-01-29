@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.sparse import csc_matrix
 from scipy.sparse import linalg as linalg_s
-import os, random, time
+import os, random, time, math 
 from scipy import linalg
 
 class MatrixCompletion:
@@ -489,6 +489,7 @@ class MatrixCompletionBD:
 		# returns Mean Squared Error
 		return sum(mse)/len(mse)
 		
+	## Outdated. Not useful for comparisons	
 	def baseline_error(self,test_file_path):
 		"""
 		
@@ -515,7 +516,26 @@ class MatrixCompletionBD:
 			mse.append((float(record[2])-self._base_measure)**2)
 
 		self._base_test_error=sum(mse)/len(mse)
+		test_data.close()
 		return (self._base_test_error)		
+	
+	
+	def random_benchmark(self,test_file_path,score_range=5):
+		"""
 
+		Compute "Random Guessing" MSE on Test Set for point of comparison 
+
+		"""
+		mse=[]
+		test_data=open(test_file_path)
+		for line in test_data:
+			record=line[0:len(line)-1].split(self._delimitter)
+			mse.append((float(record[2])-math.floor(score_range*random.random()+1))**2)
+
+		self._random_benchmark=sum(mse)/len(mse)
+		return (self._random_benchmark)	
+		test_data.close()
+	
+	# Build full data matrix
 	def build_matrix(self):
 		pass
