@@ -489,7 +489,6 @@ class MatrixCompletionBD:
 		# returns Mean Squared Error
 		return sum(mse)/len(mse)
 		
-	## Outdated. Not useful for comparisons	
 	def baseline_error(self,test_file_path):
 		"""
 		
