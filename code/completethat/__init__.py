@@ -25,5 +25,7 @@ Where, M represents the data matrix and \Omega represents the set of p observed 
     >>> temp.save_model()
 
 """
-from matrix_completion import MatrixCompletion
-from matrix_completion import MatrixCompletionBD
+from __future__ import absolute_import
+
+from .matrix_completion import MatrixCompletion
+from .matrix_completion import MatrixCompletionBD
